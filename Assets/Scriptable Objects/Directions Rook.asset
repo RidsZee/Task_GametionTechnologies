@@ -10,9 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 699f2d692e39c0d4680aa2a3c79025fe, type: 3}
-  m_Name: Movement Rook
+  m_Name: Directions Rook
   m_EditorClassIdentifier: 
-  Movement: 3
-  Direction: 4
-  MaxSteps: 0
-  StepsCount: 1
+  Directions: 00000000010000000200000003000000
+  TotalDirections: 4

@@ -29,7 +29,7 @@ public class GridManager : MonoBehaviour
         MovementSteps = new Vector3[MaxAmountOfSteps];
     }
 
-    public void DrawPath()
+    public void DrawPath(CharacterProperties.Character_Type _characterType, CharacterProperties.Movement_Type _movementType)
     {
         
     }
