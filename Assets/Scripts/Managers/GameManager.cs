@@ -10,11 +10,10 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     GridConfiguration gridConfig;
 
-    int GridLength;
-    int GridWidth;
-
     Character SelectedCharacter;
     CustomDataStructures.CellIndex SelectedCell;
+    int CellDistance;
+    CharacterProperties.Movement_Type InputDetectedDirection;
 
     void Awake()
     {
@@ -23,17 +22,27 @@ public class GameManager : MonoBehaviour
 
     void OnEnable()
     {
-        
+        ActionsContainer.OnCharacterSelected += OnCharacterSelected;
+        ActionsContainer.OnAllCharactersDeSelected += OnAllCharactersDeSelected;
+        ActionsContainer.OnTargetCellSelected += OnTargetCellSelected;
     }
 
     void OnDisable()
     {
-        
+        ActionsContainer.OnCharacterSelected -= OnCharacterSelected;
+        ActionsContainer.OnAllCharactersDeSelected -= OnAllCharactersDeSelected;
+        ActionsContainer.OnTargetCellSelected -= OnTargetCellSelected;
+    }
+
+    void Start()
+    {
+
     }
 
     void OnCharacterSelected(Character _character)
     {
         SelectedCharacter = _character;
+        SelectedCell = _character.characterProperties.CurrentCell;
     }
 
     void OnAllCharactersDeSelected()
@@ -41,15 +50,8 @@ public class GameManager : MonoBehaviour
         SelectedCharacter = null;
     }
 
-    void Start()
+    void OnTargetCellSelected(CustomDataStructures.CellIndex _targetCellIndex)
     {
-        if(!gridConfig)
-        {
-            Debug.LogWarning("Grid config not found in " + name);
-            return;
-        }
-
-        GridLength = gridConfig.GridLength;
-        GridWidth = gridConfig.GridWidth;
+        InputDetectedDirection = GridManager.Instance.GetInputDirection(SelectedCell, _targetCellIndex);
     }
 }

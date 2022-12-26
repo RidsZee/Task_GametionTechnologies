@@ -26,7 +26,10 @@ public class InputManager : MonoBehaviour
             {
                 CellData cellData = SelectedGameObject.GetComponent<CellData>();
 
-                ActionsContainer.OnTargetCellSelected?.Invoke(cellData.CellIndex);
+                if(!cellData.isOccupied)
+                {
+                    ActionsContainer.OnTargetCellSelected?.Invoke(cellData.CellIndex);
+                }
             }
             else if (SelectedGameObject.CompareTag(TagCharacters))
             {

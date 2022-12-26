@@ -24,13 +24,11 @@ public class CharacterProperties : ScriptableObject
 
     public enum Movement_Type
     {
-        Forward,
-        LShape,
+        Horizontal,
+        Vertical,
         Diagonal,
-        PlusSign,
-        CrossSign,
-        PlusAndCrossSign,
-        OneStep
+        LShape,
+        None
     }
 
     public enum Maximum_Steps
@@ -47,21 +45,22 @@ public class CharacterProperties : ScriptableObject
         Dynamic
     }
 
-    public CustomDataStructures.CellIndex CurrentCell;
-    public CustomDataStructures.CellIndex TargetCell;
-    [HideInInspector] public Vector3 TargetPosition;
 
     public Character_Type CharacterType;
-    public DirectionList DirectionList;
-    public Character_State CharacterState;
+    //public DirectionList DirectionList;
 
     public bool doAttack;
     public bool doDefend;
     public bool doWalk;
 
-    public Movement_Type Movement;
+    public Movement_Type[] Movements;
     public Maximum_Steps MaxSteps;
     public Steps_Count StepsCount;
+
+    public CustomDataStructures.CellIndex CurrentCell;
+    public CustomDataStructures.CellIndex TargetCell;
+    [HideInInspector] public Vector3 TargetPosition;
+    public Character_State CharacterState;
 
     public void OnReached_Destination()
     {

@@ -9,9 +9,6 @@ public class GridGenerator : MonoBehaviour
     GridConfiguration gridConfig;
 
     [SerializeField]
-    CellDataContainer cellDataContainer;
-
-    [SerializeField]
     Transform TileInitPosition;
     
     [Range(5, 50)] 
@@ -46,7 +43,7 @@ public class GridGenerator : MonoBehaviour
         TilePrefab = Resources.Load(CellPrefabName) as GameObject;
 
         // Validation checks
-        if(!TilePrefab || !TileInitPosition || !gridConfig || !cellDataContainer)
+        if(!TilePrefab || !TileInitPosition || !gridConfig || !GridManager.Instance.cellDataContainer)
         {
             Debug.LogWarning(WarningReferences);
             return;
@@ -74,7 +71,7 @@ public class GridGenerator : MonoBehaviour
         isColor1 = false;
 
         // Store the reference of all Cell's <CellData> component
-        cellDataContainer.AllCells = new CellData[TotalTiles];
+        GridManager.Instance.cellDataContainer.AllCells = new CellData[TotalTiles];
 
         // Set start position of the 1st tile
         NextPosition = TileInitPosition.position;
@@ -114,7 +111,7 @@ public class GridGenerator : MonoBehaviour
                 
                 // Initialize CellData values
                 CellData _cellData = G.GetComponent<CellData>();
-                cellDataContainer.AllCells[CurrentCell] = _cellData;
+                GridManager.Instance.cellDataContainer.AllCells[CurrentCell] = _cellData;
                 _cellData.SetIndex(CurrentWidth, CurrentLength);
                 G.name = string.Concat(CellNamePrefix, CurrentCell.ToString());
 

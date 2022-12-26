@@ -12,14 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98c17db845e9d2648ac5466cdfd1bc80, type: 3}
   m_Name: Character Rook
   m_EditorClassIdentifier: 
-  CurrentTileIndex: 0
-  TargetTileIndex: 0
-  TargetPosition: {x: 0, y: 0, z: 0}
   CharacterType: 3
-  DirectionList: {fileID: 11400000, guid: 32d786ce30083ec408cc92bf4da0e05e, type: 2}
   doAttack: 0
   doDefend: 0
   doWalk: 1
-  Movement: 0
+  Movements: 0000000001000000
   MaxSteps: 0
-  StepsCount: 0
+  StepsCount: 1
+  CurrentCell:
+    Horizontal: 0
+    Vertical: 0
+  TargetCell:
+    Horizontal: 0
+    Vertical: 0
+  TargetPosition: {x: 0, y: 0, z: 0}
+  CharacterState: 0
