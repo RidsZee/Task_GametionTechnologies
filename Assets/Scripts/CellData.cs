@@ -9,6 +9,20 @@ public class CellData : MonoBehaviour
 
     [SerializeField] Renderer MyRenderer;
 
+    MaterialPropertyBlock _PropertyBlock;
+    const string _ColorPropertyName = "_Color";
+    Color DefaultColor;
+
+    void Awake()
+    {
+        if(!MyRenderer)
+        {
+            GetComponent<Renderer>();
+        }
+
+        _PropertyBlock = new MaterialPropertyBlock();
+    }
+
     public void SelectCell()
     {
         isSelected = true;
@@ -27,5 +41,27 @@ public class CellData : MonoBehaviour
     public void SetSelectionIndex(int _selectionIndex)
     {
         SelectionIndex = _selectionIndex;
+    }
+
+    public void SetColor(Color _col)
+    {
+        if(MyRenderer)
+        {
+            DefaultColor = _col;
+
+            MyRenderer.GetPropertyBlock(_PropertyBlock);
+            _PropertyBlock.SetColor(_ColorPropertyName, _col);
+            MyRenderer.SetPropertyBlock(_PropertyBlock);
+        }
+    }
+
+    public void SetDefaultColor()
+    {
+        if(MyRenderer)
+        {
+            MyRenderer.GetPropertyBlock(_PropertyBlock);
+            _PropertyBlock.SetColor(_ColorPropertyName, DefaultColor);
+            MyRenderer.SetPropertyBlock(_PropertyBlock);
+        }
     }
 }

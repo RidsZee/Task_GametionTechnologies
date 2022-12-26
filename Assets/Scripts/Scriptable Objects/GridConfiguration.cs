@@ -15,5 +15,9 @@ public class GridConfiguration : ScriptableObject
     [Range(0.05f, 1.0f)]
     public float GridGap = 0.1f;
 
+    public bool AlternateCellColor;
+    public Color Color1;
+    public Color Color2;
+
     public CellData[] TilesList;
 }

@@ -26,14 +26,23 @@ public class GridGenerator : MonoBehaviour
     int TotalTiles;
     int CurrentWidth;
     // Pre calculated value <TileWidth + gap> for next tile placement
-    int CurrentTile;
+    int CurrentCell;
     float PositionOffset;
-    const string TilePrefabName = "Prefab_Tile";
+    const string CellPrefabName = "Prefab_Tile";
+    const string CellNamePrefix = "Cell_";
+    bool isColor1;
+    Coroutine coroutineGenerateGrid;
 
     void Start()
     {
-        TilePrefab = Resources.Load(TilePrefabName) as GameObject;
+        StartGeneratingGrid();
+    }
 
+    void StartGeneratingGrid()
+    {
+        TilePrefab = Resources.Load(CellPrefabName) as GameObject;
+
+        // Validation checks
         if(!TilePrefab || !TileInitPosition || !gridConfig)
         {
             Debug.LogWarning("Required fields are not assigned in the inspector!");
@@ -57,14 +66,16 @@ public class GridGenerator : MonoBehaviour
 
         TotalTiles = gridConfig.GridWidth * gridConfig.GridLength;
         CurrentWidth = gridConfig.GridWidth;
+        CurrentCell = 0;
+        isColor1 = false;
 
         gridConfig.TilesList = new CellData[TotalTiles];
 
         // Set start position of the 1st tile
         NextPosition = TileInitPosition.position;
 
-        AssignTileCache();
-        StartCoroutine(GenerateGrid());
+        DefineTilesPerFrame();
+        coroutineGenerateGrid = StartCoroutine(GenerateGrid());
     }
 
     IEnumerator GenerateGrid()
@@ -75,35 +86,53 @@ public class GridGenerator : MonoBehaviour
             while (CurrentTilesPerFrame > 0)
             {
                 // Current row is completed, calculate values for next row.
-                if(CurrentWidth == 0)
+                if (CurrentWidth == 0)
                 {
                     NextPosition.z += PositionOffset;
                     NextPosition.x = TileInitPosition.position.x;
 
                     CurrentWidth = gridConfig.GridWidth;
+
+                    // Flip the color for starting of new row if Grid Width is set to even number
+                    if (gridConfig.AlternateCellColor)
+                    {
+                        if(gridConfig.GridWidth %2 == 0)
+                        {
+                            isColor1 = !isColor1;
+                        }
+                    }
                 }
 
-                // Instantiate the scaled tile object and place it to the next <TargetPosition>.
-                GameObject G = Instantiate(TilePrefabScaled);
-                G.transform.position = NextPosition;
+                // Instantiate the scaled tile object at next <TargetPosition>
+                GameObject G = Instantiate(TilePrefabScaled, NextPosition, Quaternion.identity, TileInitPosition);
                 
                 // Initialize CellData from CellData
                 CellData _cellData = G.GetComponent<CellData>();
-                gridConfig.TilesList[CurrentTile] = _cellData;
-                _cellData.SetIndex(CurrentTile);
+                gridConfig.TilesList[CurrentCell] = _cellData;
+                _cellData.SetIndex(CurrentCell);
                 _cellData.SetSelectionIndex(0);
                 _cellData.DeSelectCell();
+                G.name = string.Concat(CellNamePrefix, CurrentCell.ToString());
+
+                // Switch to alternate color if its enabled in Grid Config
+                if(gridConfig.AlternateCellColor)
+                {
+                    if (isColor1)
+                        _cellData.SetColor(gridConfig.Color2);
+                    else
+                        _cellData.SetColor(gridConfig.Color1);
+
+                    isColor1 = !isColor1;
+                }
 
                 NextPosition.x += PositionOffset;
                 CurrentTilesPerFrame--;
                 CurrentWidth--;
                 TotalTiles--;
-                CurrentTile++;
+                CurrentCell++;
             }
 
-            AssignTileCache();
-
-            print(CurrentTile);
+            DefineTilesPerFrame();
 
             // Current frame is rendered, wait for the next frame
             yield return null;
@@ -113,7 +142,7 @@ public class GridGenerator : MonoBehaviour
     }
 
     // Define required Tiles-Generation-Per-Frame
-    void AssignTileCache()
+    void DefineTilesPerFrame()
     {
         CurrentTilesPerFrame = TilesGenerationPerFrame;
 
