@@ -16,6 +16,7 @@ MonoBehaviour:
   TargetTileIndex: {x: 0, y: 0, z: 0}
   TargetPosition: {x: 0, y: 0, z: 0}
   CharacterType: 4
+  MovementData: {fileID: 11400000, guid: 0fad9954d9fa84d4dac900583b5a6e02, type: 2}
   doAttack: 0
   doDefend: 0
-  doWalk: 0
+  doWalk: 1

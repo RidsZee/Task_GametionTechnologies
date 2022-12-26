@@ -18,6 +18,7 @@ public class CharacterProperties : ScriptableObject
     [HideInInspector] public Vector3 TargetPosition;
 
     public Character_Type CharacterType;
+    public MovementProperties MovementData;
 
     public bool doAttack;
     public bool doDefend;

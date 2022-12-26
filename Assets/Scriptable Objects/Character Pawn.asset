@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98c17db845e9d2648ac5466cdfd1bc80, type: 3}
   m_Name: Character Pawn
   m_EditorClassIdentifier: 
-  CurrentPosition: {x: 0, y: 0, z: 0}
+  CurrentTileIndex: {x: 0, y: 0, z: 0}
+  TargetTileIndex: {x: 0, y: 0, z: 0}
   TargetPosition: {x: 0, y: 0, z: 0}
   CharacterType: 0
+  MovementData: {fileID: 11400000, guid: 2a105b66b75bad144b4f258af91f7d09, type: 2}
   doAttack: 0
   doDefend: 0
   doWalk: 1
