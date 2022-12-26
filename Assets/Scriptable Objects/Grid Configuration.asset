@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9e2a16aae15a314eba57e6e6b92dcc2, type: 3}
   m_Name: Grid Configuration
   m_EditorClassIdentifier: 
-  GridWidth: 15
-  GridLength: 15
+  GridWidth: 10
+  GridLength: 10
   TileSize: 0.5
   GridGap: 0.03
   AlternateCellColor: 1

@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Direction List", menuName = "Create New Direction List")]
-public class Direction_List : ScriptableObject
+public class DirectionList : ScriptableObject
 {
     public enum ListOfDirections
     {

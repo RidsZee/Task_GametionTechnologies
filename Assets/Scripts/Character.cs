@@ -3,50 +3,85 @@ using UnityEngine;
 public class Character : MonoBehaviour, IPlayerAttack, IPlayerDefend, IPlayerWalk
 {
     public CharacterProperties characterProperties;
+    public GridConfiguration gridConfig;
+
+    void OnEnable()
+    {
+        ActionsContainer.OnCharacterSelected += OnCharacterSelected;
+        ActionsContainer.OnCharacterDeSelected += OnCharacterDeselected;
+        ActionsContainer.OnAllCharactersDeSelected += AllCharactersDeSelected;
+    }
+
+    void OnDisable()
+    {
+        ActionsContainer.OnCharacterSelected -= OnCharacterSelected;
+        ActionsContainer.OnCharacterDeSelected -= OnCharacterDeselected;
+        ActionsContainer.OnAllCharactersDeSelected -= AllCharactersDeSelected;
+    }
 
     void Start()
     {
-
+        Vector3 mySize = Vector3.one * (gridConfig.TileSize * GameManager.Instance.CharacterRelativeSize);
+        transform.localScale = mySize;
     }
 
-    public void OnCharacterSelected()
+    void AllCharactersDeSelected()
+    {
+        OnCharacterDeselected(this);
+    }
+
+    void OnCharacterSelected(Character _character)
     {
         if (characterProperties)
         {
-            if (characterProperties.doAttack)
+            if(_character == this)
             {
-                ActionsContainer.OnAttack += DoAttack;
-            }
+                if (characterProperties.doAttack)
+                {
+                    ActionsContainer.OnAttack += DoAttack;
+                }
 
-            if (characterProperties.doDefend)
-            {
-                ActionsContainer.OnDefend += DoDefend;
-            }
+                if (characterProperties.doDefend)
+                {
+                    ActionsContainer.OnDefend += DoDefend;
+                }
 
-            if (characterProperties.doWalk)
+                if (characterProperties.doWalk)
+                {
+                    ActionsContainer.OnWalk += DoWalk;
+                }
+
+                characterProperties.CharacterState = CharacterProperties.Character_State.Selected;
+            }
+            else
             {
-                ActionsContainer.OnWalk += DoWalk;
+                OnCharacterDeselected(this);
             }
         }
     }
 
-    public void OnCharacterDeselected()
+    void OnCharacterDeselected(Character _character)
     {
         if (characterProperties)
         {
-            if(characterProperties.doAttack)
+            if(_character == this && characterProperties.CharacterState == CharacterProperties.Character_State.Selected)
             {
-                ActionsContainer.OnAttack -= DoAttack;
-            }
+                if (characterProperties.doAttack)
+                {
+                    ActionsContainer.OnAttack -= DoAttack;
+                }
 
-            if (characterProperties.doDefend)
-            {
-                ActionsContainer.OnDefend -= DoDefend;
-            }
+                if (characterProperties.doDefend)
+                {
+                    ActionsContainer.OnDefend -= DoDefend;
+                }
 
-            if (characterProperties.doWalk)
-            {
-                ActionsContainer.OnWalk -= DoWalk;
+                if (characterProperties.doWalk)
+                {
+                    ActionsContainer.OnWalk -= DoWalk;
+                }
+
+                characterProperties.CharacterState = CharacterProperties.Character_State.Idle;
             }
         }
     }

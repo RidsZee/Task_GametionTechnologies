@@ -5,10 +5,11 @@ public class CharacterProperties : ScriptableObject
 {
     [System.Serializable]
 
-    public struct Current_Cell
+    public enum Character_State
     {
-        int Horizontal;
-        int Vertical;
+        Idle,
+        Selected,
+        Moving
     }
 
     public enum Character_Type
@@ -46,13 +47,13 @@ public class CharacterProperties : ScriptableObject
         Dynamic
     }
 
-    public Current_Cell CurrentCell;
-    public int CurrentTileIndex;
-    public int TargetTileIndex;
+    public CustomDataStructures.CellIndex CurrentCell;
+    public CustomDataStructures.CellIndex TargetCell;
     [HideInInspector] public Vector3 TargetPosition;
 
     public Character_Type CharacterType;
-    public Direction_List DirectionList;
+    public DirectionList DirectionList;
+    public Character_State CharacterState;
 
     public bool doAttack;
     public bool doDefend;
@@ -64,6 +65,6 @@ public class CharacterProperties : ScriptableObject
 
     public void OnReached_Destination()
     {
-        CurrentTileIndex = TargetTileIndex;
+        CurrentCell = TargetCell;
     }
 }

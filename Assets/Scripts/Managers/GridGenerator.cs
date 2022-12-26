@@ -14,27 +14,26 @@ public class GridGenerator : MonoBehaviour
     [SerializeField]
     Transform TileInitPosition;
     
-    // Determines how many tiles to generate per frame
     [Range(5, 50)] 
-    public int TilesGenerationPerFrame = 5;
-
-    // The original prefab gameobject
-    GameObject TilePrefab;
-    // Modified prefab to instantiate for tiles
-    GameObject TilePrefabScaled;
+    public int TilesGenerationPerFrame = 5; // Determines how many tiles to generate per frame
+    
+    GameObject TilePrefab; // The original prefab gameobject
+    GameObject TilePrefabScaled; // Modified prefab to instantiate for tiles
     Vector3 TileScale;
-    // Holds position to place the next tile
-    Vector3 NextPosition;
+    Vector3 NextPosition; // Holds position to place the next tile
     int CurrentTilesPerFrame;
     int TotalTiles;
     int CurrentWidth;
+    int CurrentCell; // Pre calculated value <TileWidth + gap> for next tile placement
     int CurrentLength;
-    // Pre calculated value <TileWidth + gap> for next tile placement
-    int CurrentCell;
     float PositionOffset;
+    bool isColor1;
+    
     const string CellPrefabName = "Prefab_Tile";
     const string CellNamePrefix = "Cell_";
-    bool isColor1;
+    const string WarningReferences = "Required fields are not assigned in the inspector!";
+    const string WarningCellData = "CellData component not attached to Tile Prefab";
+
     Coroutine coroutineGenerateGrid;
 
     void Start()
@@ -49,13 +48,13 @@ public class GridGenerator : MonoBehaviour
         // Validation checks
         if(!TilePrefab || !TileInitPosition || !gridConfig || !cellDataContainer)
         {
-            Debug.LogWarning("Required fields are not assigned in the inspector!");
+            Debug.LogWarning(WarningReferences);
             return;
         }
 
         if(TilePrefab && !TilePrefab.GetComponent<CellData>())
         {
-            Debug.LogWarning("CellData component not attached to Tile Prefab");
+            Debug.LogWarning(WarningCellData);
             return;
         }
 
@@ -74,6 +73,7 @@ public class GridGenerator : MonoBehaviour
         CurrentCell = 0;
         isColor1 = false;
 
+        // Store the reference of all Cell's <CellData> component
         cellDataContainer.AllCells = new CellData[TotalTiles];
 
         // Set start position of the 1st tile
@@ -112,12 +112,10 @@ public class GridGenerator : MonoBehaviour
                 // Instantiate the scaled tile object at next <TargetPosition>
                 GameObject G = Instantiate(TilePrefabScaled, NextPosition, Quaternion.identity, TileInitPosition);
                 
-                // Initialize CellData from CellData
+                // Initialize CellData values
                 CellData _cellData = G.GetComponent<CellData>();
                 cellDataContainer.AllCells[CurrentCell] = _cellData;
                 _cellData.SetIndex(CurrentWidth, CurrentLength);
-                _cellData.SetSelectionIndex(0);
-                _cellData.DeSelectCell();
                 G.name = string.Concat(CellNamePrefix, CurrentCell.ToString());
 
                 // Switch to alternate color if its enabled in Grid Config

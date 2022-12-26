@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 8953862326845720338}
   - component: {fileID: 8953862326845720337}
   - component: {fileID: -2801565036105037169}
-  m_Layer: 0
+  - component: {fileID: 38754808667533607}
+  m_Layer: 6
   m_Name: Prefab_Tile
-  m_TagString: Untagged
+  m_TagString: Cell
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -96,10 +97,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95afc38179f2785419e03f04db3bdf74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CellIndex_Horizontal: 0
-  CellIndex_Vertical: 0
-  SelectionIndex: 0
+  CellIndex:
+    Horizontal: 0
+    Vertical: 0
   isOccupied: 0
   isSelected: 0
   MyRenderer: {fileID: 8953862326845720337}
   PreferredDirection: 0
+--- !u!65 &38754808667533607
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8953862326845720336}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
