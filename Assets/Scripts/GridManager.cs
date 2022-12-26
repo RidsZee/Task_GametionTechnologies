@@ -10,7 +10,11 @@ public class GridManager : MonoBehaviour
     Vector3[] MovementSteps;
 
     int MaxAmountOfSteps;
-    int CurrentNumbeOfSteps;
+    
+    public int CurrentIndex;
+
+    int GridLength;
+    int GridWidth;
 
     void Awake()
     {
@@ -25,12 +29,38 @@ public class GridManager : MonoBehaviour
             return;
         }
 
+        GridLength = gridConfig.GridLength;
+        GridWidth = gridConfig.GridWidth;
+
         MaxAmountOfSteps = gridConfig.GridLength;
         MovementSteps = new Vector3[MaxAmountOfSteps];
     }
 
-    public void DrawPath(CharacterProperties.Character_Type _characterType, CharacterProperties.Movement_Type _movementType)
+    public void DrawPath(int _currentCellIndex, CharacterProperties.Character_Type _characterType, CharacterProperties.Movement_Type _movementType)
     {
         
+    }
+
+
+    bool CheckMovementPossibility(bool CheckVertical)
+    {
+        if(CurrentIndex < GridLength - 1)
+        {
+            return false;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    bool CheckMovementPossibility(bool CheckVertical, bool CheckHorizontal)
+    {
+        return false;
+    }
+
+    bool CheckMovementPossibility(bool CheckVertical, bool CheckHorizontal, int StepsCount)
+    {
+        return false;
     }
 }

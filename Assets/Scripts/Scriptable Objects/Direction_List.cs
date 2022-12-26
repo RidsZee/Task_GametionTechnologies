@@ -20,7 +20,8 @@ public class Direction_List : ScriptableObject
         LSpahe_Right_Long,
         LSpahe_Right_Short,
         LSpahe_Left_Long,
-        LSpahe_Left_Short
+        LSpahe_Left_Short,
+        None
     }
 
     public ListOfDirections[] Directions;

@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class CellData : MonoBehaviour
 {
-    public int CellIndex;
+    public int CellIndex_Horizontal;
+    public int CellIndex_Vertical;
     public int SelectionIndex;
     public bool isOccupied;
     public bool isSelected;
@@ -11,7 +12,9 @@ public class CellData : MonoBehaviour
 
     MaterialPropertyBlock _PropertyBlock;
     const string _ColorPropertyName = "_Color";
-    Color DefaultColor;
+    Material DefaultMaterial;
+
+    public Direction_List.ListOfDirections PreferredDirection;
 
     void Awake()
     {
@@ -20,7 +23,7 @@ public class CellData : MonoBehaviour
             GetComponent<Renderer>();
         }
 
-        _PropertyBlock = new MaterialPropertyBlock();
+        //_PropertyBlock = new MaterialPropertyBlock();
     }
 
     public void SelectCell()
@@ -33,9 +36,10 @@ public class CellData : MonoBehaviour
         isSelected = false;
     }
 
-    public void SetIndex(int _index)
+    public void SetIndex(int _indexHorizontal, int _indexVertical)
     {
-        CellIndex = _index;
+        CellIndex_Horizontal = _indexHorizontal;
+        CellIndex_Vertical = _indexVertical;
     }
 
     public void SetSelectionIndex(int _selectionIndex)
@@ -43,15 +47,13 @@ public class CellData : MonoBehaviour
         SelectionIndex = _selectionIndex;
     }
 
-    public void SetColor(Color _col)
+    public void SetColor(Material _mat)
     {
         if(MyRenderer)
         {
-            DefaultColor = _col;
+            DefaultMaterial = _mat;
 
-            MyRenderer.GetPropertyBlock(_PropertyBlock);
-            _PropertyBlock.SetColor(_ColorPropertyName, _col);
-            MyRenderer.SetPropertyBlock(_PropertyBlock);
+            MyRenderer.material = _mat;
         }
     }
 
@@ -59,9 +61,7 @@ public class CellData : MonoBehaviour
     {
         if(MyRenderer)
         {
-            MyRenderer.GetPropertyBlock(_PropertyBlock);
-            _PropertyBlock.SetColor(_ColorPropertyName, DefaultColor);
-            MyRenderer.SetPropertyBlock(_PropertyBlock);
+            MyRenderer.material = DefaultMaterial;
         }
     }
 }

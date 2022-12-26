@@ -9,6 +9,9 @@ public class GridGenerator : MonoBehaviour
     GridConfiguration gridConfig;
 
     [SerializeField]
+    CellDataContainer cellDataContainer;
+
+    [SerializeField]
     Transform TileInitPosition;
     
     // Determines how many tiles to generate per frame
@@ -25,6 +28,7 @@ public class GridGenerator : MonoBehaviour
     int CurrentTilesPerFrame;
     int TotalTiles;
     int CurrentWidth;
+    int CurrentLength;
     // Pre calculated value <TileWidth + gap> for next tile placement
     int CurrentCell;
     float PositionOffset;
@@ -43,7 +47,7 @@ public class GridGenerator : MonoBehaviour
         TilePrefab = Resources.Load(CellPrefabName) as GameObject;
 
         // Validation checks
-        if(!TilePrefab || !TileInitPosition || !gridConfig)
+        if(!TilePrefab || !TileInitPosition || !gridConfig || !cellDataContainer)
         {
             Debug.LogWarning("Required fields are not assigned in the inspector!");
             return;
@@ -65,11 +69,12 @@ public class GridGenerator : MonoBehaviour
         TilePrefabScaled.transform.localScale = TileScale;
 
         TotalTiles = gridConfig.GridWidth * gridConfig.GridLength;
-        CurrentWidth = gridConfig.GridWidth;
+        CurrentLength = 0;
+        CurrentWidth = 0;
         CurrentCell = 0;
         isColor1 = false;
 
-        gridConfig.TilesList = new CellData[TotalTiles];
+        cellDataContainer.AllCells = new CellData[TotalTiles];
 
         // Set start position of the 1st tile
         NextPosition = TileInitPosition.position;
@@ -86,17 +91,18 @@ public class GridGenerator : MonoBehaviour
             while (CurrentTilesPerFrame > 0)
             {
                 // Current row is completed, calculate values for next row.
-                if (CurrentWidth == 0)
+                if (CurrentWidth == gridConfig.GridWidth)
                 {
                     NextPosition.z += PositionOffset;
                     NextPosition.x = TileInitPosition.position.x;
+                    CurrentLength++;
 
-                    CurrentWidth = gridConfig.GridWidth;
+                    CurrentWidth = 0;
 
                     // Flip the color for starting of new row if Grid Width is set to even number
                     if (gridConfig.AlternateCellColor)
                     {
-                        if(gridConfig.GridWidth %2 == 0)
+                        if(gridConfig.GridWidth % 2 == 0)
                         {
                             isColor1 = !isColor1;
                         }
@@ -108,8 +114,8 @@ public class GridGenerator : MonoBehaviour
                 
                 // Initialize CellData from CellData
                 CellData _cellData = G.GetComponent<CellData>();
-                gridConfig.TilesList[CurrentCell] = _cellData;
-                _cellData.SetIndex(CurrentCell);
+                cellDataContainer.AllCells[CurrentCell] = _cellData;
+                _cellData.SetIndex(CurrentWidth, CurrentLength);
                 _cellData.SetSelectionIndex(0);
                 _cellData.DeSelectCell();
                 G.name = string.Concat(CellNamePrefix, CurrentCell.ToString());
@@ -118,16 +124,16 @@ public class GridGenerator : MonoBehaviour
                 if(gridConfig.AlternateCellColor)
                 {
                     if (isColor1)
-                        _cellData.SetColor(gridConfig.Color2);
+                        _cellData.SetColor(gridConfig.Mat1);
                     else
-                        _cellData.SetColor(gridConfig.Color1);
+                        _cellData.SetColor(gridConfig.Mat2);
 
                     isColor1 = !isColor1;
                 }
 
                 NextPosition.x += PositionOffset;
                 CurrentTilesPerFrame--;
-                CurrentWidth--;
+                CurrentWidth++;
                 TotalTiles--;
                 CurrentCell++;
             }

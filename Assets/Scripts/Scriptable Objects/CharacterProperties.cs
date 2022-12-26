@@ -3,6 +3,14 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Character", menuName = "Create New Character")]
 public class CharacterProperties : ScriptableObject
 {
+    [System.Serializable]
+
+    public struct Current_Cell
+    {
+        int Horizontal;
+        int Vertical;
+    }
+
     public enum Character_Type
     {
         Pawn,
@@ -38,6 +46,7 @@ public class CharacterProperties : ScriptableObject
         Dynamic
     }
 
+    public Current_Cell CurrentCell;
     public int CurrentTileIndex;
     public int TargetTileIndex;
     [HideInInspector] public Vector3 TargetPosition;

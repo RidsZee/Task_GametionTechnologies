@@ -9,7 +9,7 @@ public class Character : MonoBehaviour, IPlayerAttack, IPlayerDefend, IPlayerWal
 
     }
 
-    void OnCharacterSelected()
+    public void OnCharacterSelected()
     {
         if (characterProperties)
         {
@@ -30,7 +30,7 @@ public class Character : MonoBehaviour, IPlayerAttack, IPlayerDefend, IPlayerWal
         }
     }
 
-    void OnCharacterDeselected()
+    public void OnCharacterDeselected()
     {
         if (characterProperties)
         {
@@ -64,9 +64,6 @@ public class Character : MonoBehaviour, IPlayerAttack, IPlayerDefend, IPlayerWal
 
     public void DoWalk()
     {
-        if(characterProperties.CharacterType == CharacterProperties.Character_Type.Pawn)
-        {
-
-        }
+        
     }
 }
