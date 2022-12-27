@@ -18,6 +18,12 @@ public class GridConfiguration : ScriptableObject
     [Range(0.2f, 2.0f)]
     public float HighlightWrongCell = 0.5f;
 
+    [Range(0.5f, 1.0f)]
+    public float CharacterRelativeSize = 0.85f;
+
+    [Range(0.1f, 1.0f)]
+    public float CharacterMovementSpeed = 0.5f;
+
     public bool AlternateCellColor;
     public Material Mat1;
     public Material Mat2;

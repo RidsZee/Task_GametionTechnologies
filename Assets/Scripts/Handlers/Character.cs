@@ -15,6 +15,8 @@ public class Character : MonoBehaviour, IPlayerAttack, IPlayerDefend, IPlayerWal
     public CustomDataStructures.CellIndex CurrentCell;
     public Character_State CharacterState;
 
+    public int CharacterID;
+
     void OnEnable()
     {
         ActionsContainer.OnCharacterSelected += OnCharacterSelected;
@@ -31,7 +33,7 @@ public class Character : MonoBehaviour, IPlayerAttack, IPlayerDefend, IPlayerWal
 
     void Start()
     {
-        Vector3 mySize = Vector3.one * (gridConfig.TileSize * GameManager.Instance.CharacterRelativeSize);
+        Vector3 mySize = Vector3.one * (gridConfig.TileSize * gridConfig.CharacterRelativeSize);
         transform.localScale = mySize;
     }
 
@@ -44,7 +46,7 @@ public class Character : MonoBehaviour, IPlayerAttack, IPlayerDefend, IPlayerWal
     {
         if (characterProperties)
         {
-            if(_character == this)
+            if(_character.CharacterID == CharacterID)
             {
                 if (characterProperties.doAttack)
                 {
@@ -75,7 +77,7 @@ public class Character : MonoBehaviour, IPlayerAttack, IPlayerDefend, IPlayerWal
     {
         if (characterProperties)
         {
-            if(_character == this && CharacterState == Character_State.Selected)
+            if(_character.CharacterID == CharacterID && CharacterState == Character_State.Selected)
             {
                 if (characterProperties.doAttack)
                 {

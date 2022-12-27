@@ -3,14 +3,6 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance;
-
-    [Range(0.5f, 1.0f)]
-    public float CharacterRelativeSize = 0.85f;
-
-    [Range(0.1f, 1.0f)]
-    public float CharacterMovementSpeed = 0.5f;
-
     [SerializeField]
     GridConfiguration gridConfig;
 
@@ -21,11 +13,6 @@ public class GameManager : MonoBehaviour
     CellData CurrentCellData;
     CellData TargetCellData;
     Vector3[] PathPoints;
-
-    void Awake()
-    {
-        Instance = this;
-    }
 
     void OnEnable()
     {
@@ -149,7 +136,7 @@ public class GameManager : MonoBehaviour
     IEnumerator MoveCharacter()
     {
         int Distance = 0;
-        float Timer = CharacterMovementSpeed;
+        float Timer = gridConfig.CharacterMovementSpeed;
 
         while(Distance < CellDistance)
         {
@@ -159,7 +146,7 @@ public class GameManager : MonoBehaviour
                 yield return null;
             }
 
-            Timer = CharacterMovementSpeed;
+            Timer = gridConfig.CharacterMovementSpeed;
 
             SelectedCharacter.transform.position = PathPoints[Distance];
             Distance++;
