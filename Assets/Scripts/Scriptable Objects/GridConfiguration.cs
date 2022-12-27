@@ -15,8 +15,13 @@ public class GridConfiguration : ScriptableObject
     [Range(0, 1.0f)]
     public float GridGap = 0.1f;
 
+    [Range(0.2f, 2.0f)]
+    public float HighlightWrongCell = 0.5f;
+
     public bool AlternateCellColor;
     public Material Mat1;
     public Material Mat2;
     public Material MatHighlight;
+    public Material MatCorrectCell;
+    public Material MatWrongCell;
 }

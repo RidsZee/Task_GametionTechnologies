@@ -15,8 +15,11 @@ MonoBehaviour:
   GridWidth: 8
   GridLength: 8
   TileSize: 0.5
-  GridGap: 0.03
+  GridGap: 0.05
+  HighlightWrongCell: 0.5
   AlternateCellColor: 1
   Mat1: {fileID: 2100000, guid: e56bb6d562cd64a4a808831b0b1b2411, type: 2}
   Mat2: {fileID: 2100000, guid: 8aa5d3aaaf1600049a4bdd8cf946dc05, type: 2}
   MatHighlight: {fileID: 2100000, guid: 9478bc361947d804d8304ce682d95fb0, type: 2}
+  MatCorrectCell: {fileID: 2100000, guid: 46ed155eda090e542b27b8f47cf96515, type: 2}
+  MatWrongCell: {fileID: 2100000, guid: 91cdbd55c13a2bd4b8b93937c8dfdce8, type: 2}

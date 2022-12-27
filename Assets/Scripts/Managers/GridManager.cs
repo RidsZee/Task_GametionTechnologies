@@ -158,7 +158,7 @@ public class GridManager : MonoBehaviour
 
         if (_direction != CharacterProperties.Movement_Type.LShape)
         {
-            while (CurrentDistance <= _distance)
+            while (CurrentDistance < _distance)
             {
                 CurrentDistance++;
 
@@ -176,7 +176,7 @@ public class GridManager : MonoBehaviour
 
             if(Diff_Vertical == 1 || Diff_Vertical == -1)
             {
-                CurrentCellIndex.Vertical += Diff_Vertical;
+                CurrentCellIndex.Vertical = _startPoint.Vertical + Diff_Vertical;
                 CurrentCellIndex.Horizontal = _startPoint.Horizontal;
 
                 PathPoints[0] = GetCellData_From_CellIndex(CurrentCellIndex).transform.position;
@@ -198,7 +198,7 @@ public class GridManager : MonoBehaviour
             }
             else if(Diff_Horizontal == 1 || Diff_Horizontal == -1)
             {
-                CurrentCellIndex.Horizontal += Diff_Horizontal;
+                CurrentCellIndex.Horizontal = _startPoint.Horizontal + Diff_Horizontal;
                 CurrentCellIndex.Vertical = _startPoint.Vertical;
 
                 PathPoints[0] = GetCellData_From_CellIndex(CurrentCellIndex).transform.position;

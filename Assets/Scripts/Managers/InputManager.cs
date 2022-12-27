@@ -18,39 +18,45 @@ public class InputManager : MonoBehaviour
 
     public void OnTouchClick()
     {
-        if(Physics.Raycast(MainCamera.ScreenPointToRay(Input.mousePosition), out HitInfo, RayDistance, InputLayerMask))
+        if(GameStateManager.Instance.GameState == GameStateManager.Game_State.Idle || GameStateManager.Instance.GameState == GameStateManager.Game_State.CharacterSelected)
         {
-            GameObject SelectedGameObject = HitInfo.collider.gameObject;
-
-            if (SelectedGameObject.CompareTag(TagCells))
+            if (Physics.Raycast(MainCamera.ScreenPointToRay(Input.mousePosition), out HitInfo, RayDistance, InputLayerMask))
             {
-                CellData cellData = SelectedGameObject.GetComponent<CellData>();
+                GameObject SelectedGameObject = HitInfo.collider.gameObject;
 
-                if(!cellData.isOccupied)
+                if (SelectedGameObject.CompareTag(TagCells))
                 {
-                    ActionsContainer.OnWalk?.Invoke(cellData);
-                }
-                else
-                {
-                    Debug.LogWarning("Target cell is occupied");
-                }
-            }
-            else if (SelectedGameObject.CompareTag(TagCharacters))
-            {
-                Character character = SelectedGameObject.GetComponent<Character>();
+                    if(GameStateManager.Instance.GameState == GameStateManager.Game_State.CharacterSelected)
+                    {
+                        CellData cellData = SelectedGameObject.GetComponent<CellData>();
 
-                if(character.CharacterState == Character.Character_State.Idle)
-                {
-                    ActionsContainer.OnCharacterSelected?.Invoke(character);
-                    GameStateManager.Instance.GameState = GameStateManager.Game_State.CharacterSelected;
+                        if (!cellData.isOccupied)
+                        {
+                            ActionsContainer.OnWalk?.Invoke(cellData);
+                        }
+                        else
+                        {
+                            Debug.LogWarning("Target cell is occupied");
+                        }
+                    }
                 }
-                else if (character.CharacterState == Character.Character_State.Selected)
+                else if (SelectedGameObject.CompareTag(TagCharacters))
                 {
-                    ActionsContainer.OnCharacterDeSelected?.Invoke(character);
-                    GameStateManager.Instance.GameState = GameStateManager.Game_State.Idle;
-                }
+                    Character character = SelectedGameObject.GetComponent<Character>();
 
-                print(SelectedGameObject.name + " || " + SelectedGameObject.tag);
+                    if (character.CharacterState == Character.Character_State.Idle)
+                    {
+                        ActionsContainer.OnCharacterSelected?.Invoke(character);
+                        GameStateManager.Instance.GameState = GameStateManager.Game_State.CharacterSelected;
+                    }
+                    else if (character.CharacterState == Character.Character_State.Selected)
+                    {
+                        ActionsContainer.OnCharacterDeSelected?.Invoke(character);
+                        GameStateManager.Instance.GameState = GameStateManager.Game_State.Idle;
+                    }
+
+                    print(SelectedGameObject.name + " || " + SelectedGameObject.tag);
+                }
             }
         }
     }
