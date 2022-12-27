@@ -26,12 +26,20 @@ public class CellData : MonoBehaviour
         CellIndex.Vertical = _indexVertical;
     }
 
-    public void SetColor(Material _mat)
+    public void SetGridColor(Material _mat)
     {
         if(MyRenderer)
         {
             DefaultMaterial = _mat;
 
+            MyRenderer.material = _mat;
+        }
+    }
+
+    public void SetHighlightColor(Material _mat)
+    {
+        if (MyRenderer)
+        {
             MyRenderer.material = _mat;
         }
     }

@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9e2a16aae15a314eba57e6e6b92dcc2, type: 3}
   m_Name: Grid Configuration
   m_EditorClassIdentifier: 
-  GridWidth: 10
-  GridLength: 10
+  GridWidth: 8
+  GridLength: 8
   TileSize: 0.5
   GridGap: 0.03
   AlternateCellColor: 1
   Mat1: {fileID: 2100000, guid: e56bb6d562cd64a4a808831b0b1b2411, type: 2}
   Mat2: {fileID: 2100000, guid: 8aa5d3aaaf1600049a4bdd8cf946dc05, type: 2}
-  HighlightColor: {r: 1, g: 0.41528338, b: 0.3820755, a: 1}
+  MatHighlight: {fileID: 2100000, guid: 9478bc361947d804d8304ce682d95fb0, type: 2}

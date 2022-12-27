@@ -16,7 +16,7 @@ MonoBehaviour:
   doAttack: 0
   doDefend: 0
   doWalk: 1
-  Movements: 0000000001000000
+  Movements: 000000000100000002000000
   MaxSteps: 0
   StepsCount: 1
   CurrentCell:

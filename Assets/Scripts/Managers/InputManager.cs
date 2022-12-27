@@ -28,20 +28,26 @@ public class InputManager : MonoBehaviour
 
                 if(!cellData.isOccupied)
                 {
-                    ActionsContainer.OnTargetCellSelected?.Invoke(cellData.CellIndex);
+                    ActionsContainer.OnWalk?.Invoke(cellData);
+                }
+                else
+                {
+                    Debug.LogWarning("Target cell is occupied");
                 }
             }
             else if (SelectedGameObject.CompareTag(TagCharacters))
             {
                 Character character = SelectedGameObject.GetComponent<Character>();
 
-                if(character.characterProperties.CharacterState == CharacterProperties.Character_State.Idle)
+                if(character.CharacterState == Character.Character_State.Idle)
                 {
                     ActionsContainer.OnCharacterSelected?.Invoke(character);
+                    GameStateManager.Instance.GameState = GameStateManager.Game_State.CharacterSelected;
                 }
-                else if (character.characterProperties.CharacterState == CharacterProperties.Character_State.Selected)
+                else if (character.CharacterState == Character.Character_State.Selected)
                 {
                     ActionsContainer.OnCharacterDeSelected?.Invoke(character);
+                    GameStateManager.Instance.GameState = GameStateManager.Game_State.Idle;
                 }
 
                 print(SelectedGameObject.name + " || " + SelectedGameObject.tag);

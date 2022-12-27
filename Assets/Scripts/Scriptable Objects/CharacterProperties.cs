@@ -5,13 +5,6 @@ public class CharacterProperties : ScriptableObject
 {
     [System.Serializable]
 
-    public enum Character_State
-    {
-        Idle,
-        Selected,
-        Moving
-    }
-
     public enum Character_Type
     {
         Pawn,
@@ -24,8 +17,9 @@ public class CharacterProperties : ScriptableObject
 
     public enum Movement_Type
     {
+        Forward,
+        Backward,
         Horizontal,
-        Vertical,
         Diagonal,
         LShape,
         None
@@ -56,14 +50,4 @@ public class CharacterProperties : ScriptableObject
     public Movement_Type[] Movements;
     public Maximum_Steps MaxSteps;
     public Steps_Count StepsCount;
-
-    public CustomDataStructures.CellIndex CurrentCell;
-    public CustomDataStructures.CellIndex TargetCell;
-    [HideInInspector] public Vector3 TargetPosition;
-    public Character_State CharacterState;
-
-    public void OnReached_Destination()
-    {
-        CurrentCell = TargetCell;
-    }
 }

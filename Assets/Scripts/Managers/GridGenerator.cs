@@ -18,6 +18,7 @@ public class GridGenerator : MonoBehaviour
     GameObject TilePrefabScaled; // Modified prefab to instantiate for tiles
     Vector3 TileScale;
     Vector3 NextPosition; // Holds position to place the next tile
+    
     int CurrentTilesPerFrame;
     int TotalTiles;
     int CurrentWidth;
@@ -40,6 +41,8 @@ public class GridGenerator : MonoBehaviour
 
     void StartGeneratingGrid()
     {
+        GameStateManager.Instance.GameState = GameStateManager.Game_State.GeneratingGrid;
+
         TilePrefab = Resources.Load(CellPrefabName) as GameObject;
 
         // Validation checks
@@ -119,9 +122,9 @@ public class GridGenerator : MonoBehaviour
                 if(gridConfig.AlternateCellColor)
                 {
                     if (isColor1)
-                        _cellData.SetColor(gridConfig.Mat1);
+                        _cellData.SetGridColor(gridConfig.Mat1);
                     else
-                        _cellData.SetColor(gridConfig.Mat2);
+                        _cellData.SetGridColor(gridConfig.Mat2);
 
                     isColor1 = !isColor1;
                 }
@@ -140,6 +143,8 @@ public class GridGenerator : MonoBehaviour
         }
 
         TilePrefabScaled.SetActive(false);
+        GameStateManager.Instance.GameState = GameStateManager.Game_State.Idle;
+        ActionsContainer.OnGridGenerationCompleted?.Invoke();
     }
 
     // Define required Tiles-Generation-Per-Frame

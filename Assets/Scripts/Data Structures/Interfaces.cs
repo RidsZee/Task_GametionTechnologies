@@ -12,5 +12,10 @@ public interface IPlayerDefend
 
 public interface IPlayerWalk
 {
-    void DoWalk();
+    void DoWalk(CellData TargetCell);
+}
+
+public interface IPlayerOccupyCell
+{
+    void DoOccupyCell(CustomDataStructures.CellIndex CellIndex);
 }

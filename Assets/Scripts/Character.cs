@@ -1,9 +1,19 @@
 using UnityEngine;
 
-public class Character : MonoBehaviour, IPlayerAttack, IPlayerDefend, IPlayerWalk
+public class Character : MonoBehaviour, IPlayerAttack, IPlayerDefend, IPlayerWalk, IPlayerOccupyCell
 {
+    public enum Character_State
+    {
+        Idle,
+        Selected,
+        Moving
+    }
+
     public CharacterProperties characterProperties;
     public GridConfiguration gridConfig;
+
+    public CustomDataStructures.CellIndex CurrentCell;
+    public Character_State CharacterState;
 
     void OnEnable()
     {
@@ -49,9 +59,10 @@ public class Character : MonoBehaviour, IPlayerAttack, IPlayerDefend, IPlayerWal
                 if (characterProperties.doWalk)
                 {
                     ActionsContainer.OnWalk += DoWalk;
+                    ActionsContainer.OnOccupyCell += DoOccupyCell;
                 }
 
-                characterProperties.CharacterState = CharacterProperties.Character_State.Selected;
+                CharacterState = Character_State.Selected;
             }
             else
             {
@@ -64,7 +75,7 @@ public class Character : MonoBehaviour, IPlayerAttack, IPlayerDefend, IPlayerWal
     {
         if (characterProperties)
         {
-            if(_character == this && characterProperties.CharacterState == CharacterProperties.Character_State.Selected)
+            if(_character == this && CharacterState == Character_State.Selected)
             {
                 if (characterProperties.doAttack)
                 {
@@ -79,9 +90,12 @@ public class Character : MonoBehaviour, IPlayerAttack, IPlayerDefend, IPlayerWal
                 if (characterProperties.doWalk)
                 {
                     ActionsContainer.OnWalk -= DoWalk;
+                    ActionsContainer.OnOccupyCell -= DoOccupyCell;
                 }
 
-                characterProperties.CharacterState = CharacterProperties.Character_State.Idle;
+                CharacterState = Character_State.Idle;
+
+                GridManager.Instance.GetCellData_From_CellIndex(CurrentCell).SetDefaultColor();
             }
         }
     }
@@ -97,8 +111,16 @@ public class Character : MonoBehaviour, IPlayerAttack, IPlayerDefend, IPlayerWal
         // Define defence mechanism
     }
 
-    public void DoWalk()
+    // Occupy cell whenever the character moves to a new cell / destination
+    public void DoOccupyCell(CustomDataStructures.CellIndex _cellIndex)
     {
-        
+        CurrentCell = _cellIndex;
+        CellData cellData = GridManager.Instance.GetCellData_From_CellIndex(_cellIndex);
+        cellData.isOccupied = true;
+    }
+
+    public void DoWalk(CellData _targetDestinationCell)
+    {
+        ActionsContainer.OnBeginWalking?.Invoke(_targetDestinationCell);
     }
 }

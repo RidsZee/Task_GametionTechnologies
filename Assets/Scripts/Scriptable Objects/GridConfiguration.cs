@@ -7,7 +7,7 @@ public class GridConfiguration : ScriptableObject
     public int GridWidth = 6;
 
     [Range(5, 50)]
-    public int GridLength = 5;
+    public int GridLength = 6;
 
     [Range(0.5f, 2.0f)]
     public float TileSize = 0.5f;
@@ -18,5 +18,5 @@ public class GridConfiguration : ScriptableObject
     public bool AlternateCellColor;
     public Material Mat1;
     public Material Mat2;
-    public Color HighlightColor;
+    public Material MatHighlight;
 }
