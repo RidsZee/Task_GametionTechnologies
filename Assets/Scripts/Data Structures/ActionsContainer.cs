@@ -13,4 +13,12 @@ public class ActionsContainer
     public static Action<Character> OnCharacterDeSelected;
     public static Action OnAllCharactersDeSelected;
     public static Action OnCharacterReachedTarget;
+
+    // Multiplayer
+
+    public static Action OnConnectedToNetwork;
+    public static Action<PhotonNetworkManager.Player_Identity> OnIdentitySet;
+    public static Action OnGameStart;
+
+    // RPCs
 }

@@ -5,13 +5,15 @@ public class GameStateManager : MonoBehaviour
     public enum Game_State
     {
         None,
+        GeneratingGrid,
         ConnectingToServer,
         JoiningRoom,
         WaitingForOtherPlayer,
-        GeneratingGrid,
         Idle,
         CharacterSelected,
-        MovingCharacter
+        MovingCharacter,
+        OtherPlayerTurn,
+        Disconnected
     }
 
     public Game_State GameState;

@@ -45,8 +45,6 @@ public class GridManager : MonoBehaviour
         Diff_Horizontal = _inputPosition.Horizontal - _characterPos.Horizontal;
         Diff_Vertical = _inputPosition.Vertical - _characterPos.Vertical;
 
-        print("Grid difference : " + Diff_Horizontal + ", " + Diff_Vertical);
-
         if (Diff_Horizontal == 0 && Diff_Vertical != 0) // Vertical
         {
             if(Diff_Vertical > 0)
@@ -150,11 +148,7 @@ public class GridManager : MonoBehaviour
             Incrementals.Vertical = -1;
         }
 
-        print("Incrementals : " + Incrementals.Horizontal + ", " + Incrementals.Vertical);
-
         // Calculate path points
-
-        print("Current Cell : " + _startPoint.Horizontal + ", " + _startPoint.Vertical);
 
         if (_direction != CharacterProperties.Movement_Type.LShape)
         {
@@ -164,8 +158,6 @@ public class GridManager : MonoBehaviour
 
                 CurrentCellIndex.Horizontal = _startPoint.Horizontal + (CurrentDistance * Incrementals.Horizontal);
                 CurrentCellIndex.Vertical = _startPoint.Vertical + (CurrentDistance * Incrementals.Vertical);
-
-                print("Points : " + CurrentCellIndex.Horizontal + ", " + CurrentCellIndex.Vertical);
 
                 PathPoints[CurrentDistance - 1] = GetCellData_From_CellIndex(CurrentCellIndex).transform.position;
             }
@@ -180,21 +172,17 @@ public class GridManager : MonoBehaviour
                 CurrentCellIndex.Horizontal = _startPoint.Horizontal;
 
                 PathPoints[0] = GetCellData_From_CellIndex(CurrentCellIndex).transform.position;
-                print("Points : " + CurrentCellIndex.Horizontal + ", " + CurrentCellIndex.Vertical);
-
                 _TempCellIndex = CurrentCellIndex;
 
                 CurrentCellIndex.Vertical = _TempCellIndex.Vertical;
                 CurrentCellIndex.Horizontal = _TempCellIndex.Horizontal + Incrementals.Horizontal;
 
                 PathPoints[1] = GetCellData_From_CellIndex(CurrentCellIndex).transform.position;
-                print("Points : " + CurrentCellIndex.Horizontal + ", " + CurrentCellIndex.Vertical);
-
+                
                 CurrentCellIndex.Vertical = _TempCellIndex.Vertical;
                 CurrentCellIndex.Horizontal = _TempCellIndex.Horizontal + Incrementals.Horizontal + Incrementals.Horizontal;
 
                 PathPoints[2] = GetCellData_From_CellIndex(CurrentCellIndex).transform.position;
-                print("Points : " + CurrentCellIndex.Horizontal + ", " + CurrentCellIndex.Vertical);
             }
             else if(Diff_Horizontal == 1 || Diff_Horizontal == -1)
             {
@@ -202,25 +190,19 @@ public class GridManager : MonoBehaviour
                 CurrentCellIndex.Vertical = _startPoint.Vertical;
 
                 PathPoints[0] = GetCellData_From_CellIndex(CurrentCellIndex).transform.position;
-                print("Points : " + CurrentCellIndex.Horizontal + ", " + CurrentCellIndex.Vertical);
-
                 _TempCellIndex = CurrentCellIndex;
-
+                
                 CurrentCellIndex.Vertical = _TempCellIndex.Vertical + Incrementals.Vertical;
                 CurrentCellIndex.Horizontal = _TempCellIndex.Horizontal;
 
                 PathPoints[1] = GetCellData_From_CellIndex(CurrentCellIndex).transform.position;
-                print("Points : " + CurrentCellIndex.Horizontal + ", " + CurrentCellIndex.Vertical);
-
+                
                 CurrentCellIndex.Vertical = _TempCellIndex.Vertical + Incrementals.Vertical + Incrementals.Vertical;
                 CurrentCellIndex.Horizontal = _TempCellIndex.Horizontal;
 
                 PathPoints[2] = GetCellData_From_CellIndex(CurrentCellIndex).transform.position;
-                print("Points : " + CurrentCellIndex.Horizontal + ", " + CurrentCellIndex.Vertical);
             }
         }
-
-        print("Target Cell : " + _destination.Horizontal + ", " + _destination.Vertical);
 
         return PathPoints;
     }

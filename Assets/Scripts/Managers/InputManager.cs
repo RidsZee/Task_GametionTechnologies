@@ -54,8 +54,6 @@ public class InputManager : MonoBehaviour
                         ActionsContainer.OnCharacterDeSelected?.Invoke(character);
                         GameStateManager.Instance.GameState = GameStateManager.Game_State.Idle;
                     }
-
-                    print(SelectedGameObject.name + " || " + SelectedGameObject.tag);
                 }
             }
         }

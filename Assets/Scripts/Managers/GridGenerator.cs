@@ -143,8 +143,8 @@ public class GridGenerator : MonoBehaviour
         }
 
         TilePrefabScaled.SetActive(false);
-        GameStateManager.Instance.GameState = GameStateManager.Game_State.Idle;
         ActionsContainer.OnGridGenerationCompleted?.Invoke();
+        PhotonNetworkManager.Instance.Call_ConnectToServer();
     }
 
     // Define required Tiles-Generation-Per-Frame

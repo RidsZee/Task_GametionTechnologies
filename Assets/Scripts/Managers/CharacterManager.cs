@@ -32,11 +32,13 @@ public class CharacterManager : MonoBehaviour
     void OnEnable()
     {
         ActionsContainer.OnGridGenerationCompleted += OnGridGenerationCompleted;
+        ActionsContainer.OnIdentitySet += OnPlayerIdentitySet;
     }
 
     void OnDisable()
     {
         ActionsContainer.OnGridGenerationCompleted -= OnGridGenerationCompleted;
+        ActionsContainer.OnIdentitySet -= OnPlayerIdentitySet;
     }
 
     void OnGridGenerationCompleted()
@@ -76,5 +78,33 @@ public class CharacterManager : MonoBehaviour
 
             CurrentIndex++;
         }
+    }
+
+    void OnPlayerIdentitySet(PhotonNetworkManager.Player_Identity _identity)
+    {
+        if (_identity == PhotonNetworkManager.Player_Identity.Player1)
+        {
+            foreach (Character _character in P1Characters)
+            {
+                _character.CharacterCollider.enabled = true;
+            }
+
+            foreach (Character _character in P2Characters)
+            {
+                _character.CharacterCollider.enabled = false;
+            }
+        }
+        else if (_identity == PhotonNetworkManager.Player_Identity.Player2)
+        {
+            foreach (Character _character in P1Characters)
+            {
+                _character.CharacterCollider.enabled = false;
+            }
+
+            foreach (Character _character in P2Characters)
+            {
+                _character.CharacterCollider.enabled = true;
+            }
+        }    
     }
 }

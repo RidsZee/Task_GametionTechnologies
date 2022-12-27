@@ -11,11 +11,10 @@ public class Character : MonoBehaviour, IPlayerAttack, IPlayerDefend, IPlayerWal
 
     public CharacterProperties characterProperties;
     public GridConfiguration gridConfig;
-
     public CustomDataStructures.CellIndex CurrentCell;
     public Character_State CharacterState;
-
     public int CharacterID;
+    public CapsuleCollider CharacterCollider;
 
     void OnEnable()
     {

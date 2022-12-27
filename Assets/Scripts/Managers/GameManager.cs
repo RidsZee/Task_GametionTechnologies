@@ -36,8 +36,6 @@ public class GameManager : MonoBehaviour
         SelectedCell = _character.CurrentCell;
         CurrentCellData = GridManager.Instance.GetCellData_From_CellIndex(SelectedCell);
 
-        print("Character cell : " + SelectedCell.Horizontal + ", " + SelectedCell.Vertical);
-
         GridManager.Instance.GetCellData_From_CellIndex(SelectedCell).SetHighlightColor(gridConfig.MatHighlight);
     }
 
@@ -51,17 +49,11 @@ public class GameManager : MonoBehaviour
     {
         TargetCellData = _cellData;
 
-        print("Target cell : " + _cellData.CellIndex.Horizontal + ", " + _cellData.CellIndex.Vertical);
-
         // Calculate the direction between current selected cell and selected character
         InputDetectedDirection = GridManager.Instance.GetInputDirection(SelectedCell, _cellData.CellIndex);
 
-        print("Direction found : " + InputDetectedDirection);
-
         // Calculate the cell-distance between selected character and selected target cell
         CellDistance = GridManager.Instance.GetCellDistance(SelectedCharacter.CurrentCell, _cellData.CellIndex, InputDetectedDirection);
-
-        print("Cell distance : " + CellDistance);
 
         // Check if the direction of input is matching with character's movements
         
@@ -69,15 +61,11 @@ public class GameManager : MonoBehaviour
         
         foreach(CharacterProperties.Movement_Type _movement in SelectedCharacter.characterProperties.Movements)
         {
-            print("Selected character movements : " + _movement);
-
             if(_movement == InputDetectedDirection)
             {
                 doesMovementMatch = true;
             }
         }
-
-        print("Does movement match? " + doesMovementMatch);
 
         // Check if the maximum number of steps match with character's properties
 
@@ -86,8 +74,6 @@ public class GameManager : MonoBehaviour
         if(doesMovementMatch)
         {
             int CharacterMaxSteps = (int)SelectedCharacter.characterProperties.MaxSteps;
-
-            print("Selected character max steps : " + CharacterMaxSteps);
 
             if(CharacterMaxSteps == 0) // Which is infinite
             {
@@ -101,8 +87,6 @@ public class GameManager : MonoBehaviour
             {
                 doesCellDistanceMatch = false;
             }
-
-            print("Does distance match? " + doesCellDistanceMatch);
 
             if(doesCellDistanceMatch)
             {
@@ -126,8 +110,7 @@ public class GameManager : MonoBehaviour
     void MoveCharacterToDestination(CellData _destinationCell)
     {
         GameStateManager.Instance.GameState = GameStateManager.Game_State.MovingCharacter;
-        print("Wohoooo!!! Moving character to the destination");
-
+        
         PathPoints = GridManager.Instance.GetPathPoints(SelectedCell, _destinationCell.CellIndex, InputDetectedDirection, CellDistance);
 
         StartCoroutine(MoveCharacter());
