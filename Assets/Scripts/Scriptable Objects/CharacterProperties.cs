@@ -41,8 +41,7 @@ public class CharacterProperties : ScriptableObject
 
 
     public Character_Type CharacterType;
-    //public DirectionList DirectionList;
-
+    
     public bool doAttack;
     public bool doDefend;
     public bool doWalk;

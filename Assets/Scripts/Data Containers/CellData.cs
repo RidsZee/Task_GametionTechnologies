@@ -3,15 +3,13 @@ using System.Collections;
 
 public class CellData : MonoBehaviour
 {
-    public CustomDataStructures.CellIndex CellIndex;
-    public bool isOccupied;
-    
-    [SerializeField] Renderer MyRenderer;
-
-    Material DefaultMaterial;
-
     [HideInInspector]
     public DirectionList.ListOfDirections PreferredDirection;
+    public CustomDataStructures.CellIndex CellIndex;
+    public bool isOccupied;
+
+    [SerializeField] Renderer MyRenderer;
+    Material DefaultMaterial;
 
     void Awake()
     {
