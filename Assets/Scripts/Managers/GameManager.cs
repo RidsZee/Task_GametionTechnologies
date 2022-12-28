@@ -128,11 +128,11 @@ public class GameManager : MonoBehaviour
 
     void MoveCharacterToDestination(CellData _destinationCell)
     {
-        RPCManager.Instance.SendRPC_SyncPlayerMovement(SelectedCharacter.CharacterID, SelectedCell, _destinationCell.CellIndex, InputDetectedDirection, CellDistance);
-
         GameStateManager.Instance.UpdateGameState(GameStateManager.Game_State.MovingCharacter);
 
         PathPoints = GridManager.Instance.GetPathPoints(SelectedCell, _destinationCell.CellIndex, InputDetectedDirection, CellDistance);
+
+        RPCManager.Instance.SendRPC_SyncPlayerMovement(SelectedCharacter.CharacterID, PathPoints, CellDistance);
 
         StartCoroutine(MoveCharacter());
     }
@@ -164,6 +164,8 @@ public class GameManager : MonoBehaviour
 
     void OnCharacterReachedTarget()
     {
+        RPCManager.Instance.SendRPC_SetDefaultsAfterCharacterMovement(CurrentCellData.CellIndex.Horizontal, CurrentCellData.CellIndex.Vertical, TargetCellData.CellIndex.Horizontal, TargetCellData.CellIndex.Vertical, SelectedCharacter.CharacterID);
+
         CurrentCellData.SetDefaultColor();
         CurrentCellData.isOccupied = false;
         TargetCellData.SetDefaultColor();
@@ -173,8 +175,6 @@ public class GameManager : MonoBehaviour
         SelectedCharacter = null;
         UIManager.Instance.gameStatus.SelectedCharacter = None;
         UIManager.Instance.UpdateGameStatsInUI();
-
-        RPCManager.Instance.SendRPC_SetDefaultsAfterCharacterMovement(CurrentCellData.CellIndex, TargetCellData.CellIndex, SelectedCharacter.CharacterID);
 
         if (PhotonNetworkManager.Instance.CurrentTurnPlayer == PhotonNetworkManager.Instance.MyIdentity)
         {
@@ -187,24 +187,30 @@ public class GameManager : MonoBehaviour
 
     #region RPC Receivers
 
-    void RPC_Receive_MoveCharacterToDestination(int _characterID, CustomDataStructures.CellIndex _currentCellIndex, CustomDataStructures.CellIndex _targetCellIndex, CharacterProperties.Movement_Type _movementDirection, int _cellDistance)
+    void RPC_Receive_MoveCharacterToDestination(int _characterID, Vector3[] _pathPoints, int _cellDistance)
     {
         SelectedCharacter = CharacterManager.Instance.GetCharacterFromCharacterID(_characterID);
-
-        GameStateManager.Instance.UpdateGameState(GameStateManager.Game_State.MovingCharacter);
-
-        PathPoints = GridManager.Instance.GetPathPoints(_currentCellIndex, _targetCellIndex, _movementDirection, _cellDistance);
+        CellDistance = _cellDistance;
+        PathPoints = _pathPoints;
 
         StartCoroutine(MoveCharacter());
     }
 
-    void RPC_Receive_SetDefaultsAfterCharacterReached(CustomDataStructures.CellIndex _currentCellIndex, CustomDataStructures.CellIndex _targetCellIndex, int _characterIndex)
+    void RPC_Receive_SetDefaultsAfterCharacterReached(int _currentCellIndex_H, int _currentCellIndex_V, int _targetCellIndex_H, int _targetCellIndex_V, int _characterIndex)
     {
-        CurrentCellData = GridManager.Instance.GetCellData_From_CellIndex(_currentCellIndex);
+        CustomDataStructures.CellIndex currentCellDataIndex;
+        currentCellDataIndex.Horizontal = _currentCellIndex_H;
+        currentCellDataIndex.Vertical = _currentCellIndex_V;
+
+        CurrentCellData = GridManager.Instance.GetCellData_From_CellIndex(currentCellDataIndex);
         CurrentCellData.SetDefaultColor();
         CurrentCellData.isOccupied = false;
 
-        TargetCellData = GridManager.Instance.GetCellData_From_CellIndex(_targetCellIndex);
+        CustomDataStructures.CellIndex targetCellDataIndex;
+        targetCellDataIndex.Horizontal = _targetCellIndex_H;
+        targetCellDataIndex.Vertical = _targetCellIndex_V;
+
+        TargetCellData = GridManager.Instance.GetCellData_From_CellIndex(targetCellDataIndex);
         TargetCellData.SetDefaultColor();
         
         SelectedCharacter = CharacterManager.Instance.GetCharacterFromCharacterID(_characterIndex);
