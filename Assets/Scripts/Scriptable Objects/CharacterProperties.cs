@@ -49,4 +49,7 @@ public class CharacterProperties : ScriptableObject
     public Movement_Type[] Movements;
     public Maximum_Steps MaxSteps;
     public Steps_Count StepsCount;
+
+    public Material MatHighlight;
+    public Material MatDim;
 }

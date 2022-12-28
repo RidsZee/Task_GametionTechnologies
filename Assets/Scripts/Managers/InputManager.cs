@@ -47,12 +47,12 @@ public class InputManager : MonoBehaviour
 
                     if (character.CharacterState == Character.Character_State.Idle)
                     {
-                        ActionsContainer.OnCharacterSelected?.Invoke(character);
+                        ActionsContainer.OnCharacterSelected?.Invoke(character.CharacterID);
                         GameStateManager.Instance.UpdateGameState(GameStateManager.Game_State.CharacterSelected);
                     }
                     else if (character.CharacterState == Character.Character_State.Selected)
                     {
-                        ActionsContainer.OnCharacterDeSelected?.Invoke(character);
+                        ActionsContainer.OnCharacterDeSelected?.Invoke(character.CharacterID);
                         ActionsContainer.OnAllCharactersDeSelected?.Invoke();
 
                         GameStateManager.Instance.UpdateGameState(GameStateManager.Game_State.Idle);

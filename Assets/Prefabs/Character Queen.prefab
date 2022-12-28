@@ -100,7 +100,7 @@ GameObject:
   m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3561176172279082902
 Transform:
   m_ObjectHideFlags: 0
@@ -129,6 +129,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fb51a0e182be1b4e9cf48e7a0911c73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayerType: 0
   characterProperties: {fileID: 11400000, guid: 0532bbfdcc93e9a4697810915f0cd88f, type: 2}
   gridConfig: {fileID: 11400000, guid: 647d2e669fc373640bbecda8119ab26c, type: 2}
   CurrentCell:
@@ -137,6 +138,7 @@ MonoBehaviour:
   CharacterState: 0
   CharacterID: 0
   CharacterCollider: {fileID: 1247877284733750486}
+  MyRenderer: {fileID: 1154297839545938178}
 --- !u!136 &1247877284733750486
 CapsuleCollider:
   m_ObjectHideFlags: 0

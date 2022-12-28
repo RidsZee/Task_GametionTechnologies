@@ -19,11 +19,5 @@ MonoBehaviour:
   Movements: 00000000010000000200000003000000
   MaxSteps: 0
   StepsCount: 1
-  CurrentCell:
-    Horizontal: 0
-    Vertical: 0
-  TargetCell:
-    Horizontal: 0
-    Vertical: 0
-  TargetPosition: {x: 0, y: 0, z: 0}
-  CharacterState: 0
+  MatHighlight: {fileID: 2100000, guid: 7bcb8a6d667159a4c9ce3ae41d60147b, type: 2}
+  MatDim: {fileID: 2100000, guid: 5d59cab9947578d4a81993bdebf45716, type: 2}

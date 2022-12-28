@@ -59,33 +59,17 @@ public class RPCManager : MonoBehaviour
 
 
 
-    public void SendRPC_SyncPlayerMovement(int _characterID, Vector3[] _pathPoints, int _cellDistance)
+    public void SendRPC_SyncPlayerMovement(int _characterID, Vector3[] _pathPoints, int _cellDistance, int _currentCellIndex_H, int _currentCellIndex_V, int _targetCellIndex_H, int _targetCellIndex_V)
     {
         if (PhotonNetwork.IsConnected)
         {
-            photonView.RPC(nameof(RPC_SyncPlayerMovement), RpcTarget.Others, _characterID, _pathPoints, _cellDistance);
+            photonView.RPC(nameof(RPC_SyncPlayerMovement), RpcTarget.AllViaServer, _characterID, _pathPoints, _cellDistance, _currentCellIndex_H, _currentCellIndex_V, _targetCellIndex_H, _targetCellIndex_V);
         }
     }
 
     [PunRPC]
-    void RPC_SyncPlayerMovement(int _characterID, Vector3[] _pathPoints, int _cellDistance)
+    void RPC_SyncPlayerMovement(int _characterID, Vector3[] _pathPoints, int _cellDistance, int _currentCellIndex_H, int _currentCellIndex_V, int _targetCellIndex_H, int _targetCellIndex_V)
     {
-        ActionsContainer.OnSyncCharacterMovement(_characterID, _pathPoints, _cellDistance);
-    }
-
-
-
-    public void SendRPC_SetDefaultsAfterCharacterMovement(int _currentCellIndex_H, int _currentCellIndex_V, int _targetCellIndex_H, int _targetCellIndex_V, int _characterIndex)
-    {
-        if (PhotonNetwork.IsConnected)
-        {
-            photonView.RPC(nameof(RPC_SetDefaultsAfterCharacterMovement), RpcTarget.Others, _currentCellIndex_H, _currentCellIndex_V, _targetCellIndex_H, _targetCellIndex_V, _characterIndex);
-        }
-    }
-
-    [PunRPC]
-    void RPC_SetDefaultsAfterCharacterMovement(int _currentCellIndex_H, int _currentCellIndex_V, int _targetCellIndex_H, int _targetCellIndex_V, int _characterIndex)
-    {
-        ActionsContainer.OnSetDefaultsAfterMovement(_currentCellIndex_H, _currentCellIndex_V, _targetCellIndex_H, _targetCellIndex_V, _characterIndex);
+        ActionsContainer.OnSyncCharacterMovement(_characterID, _pathPoints, _cellDistance, _currentCellIndex_H, _currentCellIndex_V, _targetCellIndex_H, _targetCellIndex_V);
     }
 }

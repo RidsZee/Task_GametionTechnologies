@@ -122,7 +122,7 @@ public class CharacterManager : MonoBehaviour
         }
         else
         {
-            return P1Characters[_characterID - 6];
+            return P2Characters[_characterID - 6];
         }
     }
 }

@@ -9,18 +9,22 @@ public class Character : MonoBehaviour, IPlayerAttack, IPlayerDefend, IPlayerWal
         Moving
     }
 
+    public PhotonNetworkManager.Player_Identity PlayerType;
     public CharacterProperties characterProperties;
     public GridConfiguration gridConfig;
     public CustomDataStructures.CellIndex CurrentCell;
     public Character_State CharacterState;
     public int CharacterID;
     public CapsuleCollider CharacterCollider;
+    [SerializeField]
+    Renderer MyRenderer;
 
     void OnEnable()
     {
         ActionsContainer.OnCharacterSelected += OnCharacterSelected;
         ActionsContainer.OnCharacterDeSelected += OnCharacterDeselected;
         ActionsContainer.OnAllCharactersDeSelected += AllCharactersDeSelected;
+        ActionsContainer.OnPlayerSideSwitch += OnPlayerSideSwitched;
     }
 
     void OnDisable()
@@ -28,24 +32,26 @@ public class Character : MonoBehaviour, IPlayerAttack, IPlayerDefend, IPlayerWal
         ActionsContainer.OnCharacterSelected -= OnCharacterSelected;
         ActionsContainer.OnCharacterDeSelected -= OnCharacterDeselected;
         ActionsContainer.OnAllCharactersDeSelected -= AllCharactersDeSelected;
+        ActionsContainer.OnPlayerSideSwitch -= OnPlayerSideSwitched;
     }
 
     void Start()
     {
         Vector3 mySize = Vector3.one * (gridConfig.TileSize * gridConfig.CharacterRelativeSize);
         transform.localScale = mySize;
+        SetDimColor();
     }
 
     void AllCharactersDeSelected()
     {
-        OnCharacterDeselected(this);
+        OnCharacterDeselected(CharacterID);
     }
 
-    void OnCharacterSelected(Character _character)
+    void OnCharacterSelected(int _characterID)
     {
         if (characterProperties)
         {
-            if(_character.CharacterID == CharacterID)
+            if(_characterID == CharacterID)
             {
                 if (characterProperties.doAttack)
                 {
@@ -59,6 +65,8 @@ public class Character : MonoBehaviour, IPlayerAttack, IPlayerDefend, IPlayerWal
 
                 if (characterProperties.doWalk)
                 {
+                    //
+                    UIManager.Instance.UpdateMultiplayerLogs("R");
                     ActionsContainer.OnWalk += DoWalk;
                     ActionsContainer.OnOccupyCell += DoOccupyCell;
                 }
@@ -67,16 +75,16 @@ public class Character : MonoBehaviour, IPlayerAttack, IPlayerDefend, IPlayerWal
             }
             else
             {
-                OnCharacterDeselected(this);
+                OnCharacterDeselected(CharacterID);
             }
         }
     }
 
-    void OnCharacterDeselected(Character _character)
+    void OnCharacterDeselected(int _characterID)
     {
         if (characterProperties)
         {
-            if(_character.CharacterID == CharacterID && CharacterState == Character_State.Selected)
+            if(_characterID == CharacterID && CharacterState == Character_State.Selected || CharacterState == Character_State.Moving)
             {
                 if (characterProperties.doAttack)
                 {
@@ -123,5 +131,34 @@ public class Character : MonoBehaviour, IPlayerAttack, IPlayerDefend, IPlayerWal
     public void DoWalk(CellData _targetDestinationCell)
     {
         ActionsContainer.OnBeginWalking?.Invoke(_targetDestinationCell);
+    }
+
+
+    void OnPlayerSideSwitched(PhotonNetworkManager.Player_Identity _currentPlayer)
+    {
+        if(PhotonNetworkManager.Instance.MyIdentity == PlayerType && _currentPlayer == PlayerType)
+        {
+            SetHighlightColor();
+        }
+        else
+        {
+            SetDimColor();
+        }
+    }
+
+    void SetHighlightColor()
+    {
+        if(MyRenderer)
+        {
+            MyRenderer.material = characterProperties.MatHighlight;
+        }
+    }
+
+    void SetDimColor()
+    {
+        if (MyRenderer)
+        {
+            MyRenderer.material = characterProperties.MatDim;
+        }
     }
 }
