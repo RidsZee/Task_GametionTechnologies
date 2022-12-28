@@ -1260,7 +1260,7 @@ GameObject:
   - component: {fileID: 1174821913}
   - component: {fileID: 1174821914}
   m_Layer: 0
-  m_Name: _Managers
+  m_Name: _GameScripts
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1851,6 +1851,58 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3561176172279082902, guid: 3620a87021c4aef4a98d8e5d782094f3, type: 3}
   m_PrefabInstance: {fileID: 1283254790}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1950658250
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1950658251}
+  - component: {fileID: 1950658252}
+  m_Layer: 0
+  m_Name: _UIManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1950658251
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1950658250}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -6.258783, y: -1.8698823, z: -2.4389598}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1950658252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1950658250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 156372b1fc950b046ac934a245de2adf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameStatus:
+    isConnected: 
+    PlayerCount: 
+    YourIdentity: 
+    CurrentPlayer: 
+    SelectedCharacter: 
+  MaxMultiplayerLogs: 25
+  T_GameStatus: {fileID: 0}
 --- !u!4 &1986454169 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3561176172279082902, guid: 2a18db0bee39417448c45ea96789f94c, type: 3}

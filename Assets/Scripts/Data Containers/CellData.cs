@@ -11,6 +11,9 @@ public class CellData : MonoBehaviour
     [SerializeField] Renderer MyRenderer;
     Material DefaultMaterial;
 
+    bool isWrongCellHighlighted;
+    Coroutine Coroutine_HighlightWrongCell;
+
     void Awake()
     {
         if(!MyRenderer)
@@ -57,7 +60,12 @@ public class CellData : MonoBehaviour
         {
             MyRenderer.material = _mat;
 
-            StartCoroutine(HighlightWrongCell(_mat, _timer));
+            if(isWrongCellHighlighted)
+            {
+                StopCoroutine(Coroutine_HighlightWrongCell);
+            }
+
+            Coroutine_HighlightWrongCell = StartCoroutine(HighlightWrongCell(_mat, _timer));
         }
     }
 
@@ -71,6 +79,7 @@ public class CellData : MonoBehaviour
 
     IEnumerator HighlightWrongCell(Material _mat, float _timer)
     {
+        isWrongCellHighlighted = true;
         float currentTimer = _timer;
 
         while(currentTimer > 0)
@@ -81,5 +90,6 @@ public class CellData : MonoBehaviour
         }
 
         SetDefaultColor();
+        isWrongCellHighlighted = false;
     }
 }

@@ -37,12 +37,14 @@ public class GameManager : MonoBehaviour
         CurrentCellData = GridManager.Instance.GetCellData_From_CellIndex(SelectedCell);
 
         GridManager.Instance.GetCellData_From_CellIndex(SelectedCell).SetHighlightColor(gridConfig.MatHighlight);
+        UIManager.Instance.gameStatus.Update_SelectedCharacter(_character.characterProperties.CharacterType);
     }
 
     void OnAllCharactersDeSelected()
     {
         SelectedCharacter = null;
         GridManager.Instance.GetCellData_From_CellIndex(SelectedCell).SetDefaultColor();
+        UIManager.Instance.gameStatus.SelectedCharacter = "None";
     }
 
     void OnCharacterWalkStarted(CellData _cellData)
@@ -145,6 +147,34 @@ public class GameManager : MonoBehaviour
         TargetCellData.SetDefaultColor();
         SelectedCharacter.DoOccupyCell(TargetCellData.CellIndex);
         SelectedCharacter.CharacterState = Character.Character_State.Idle;
-        GameStateManager.Instance.GameState = GameStateManager.Game_State.Idle;
+
+        if(PhotonNetworkManager.Instance.isMaster)
+        {
+            PhotonNetworkManager.Instance.Call_SwitchSides();
+        }
+    }
+
+    void On_RPCReceived_SwitchSides(PhotonNetworkManager.Player_Identity CurrentPlayer)
+    {
+        if(CurrentPlayer == PhotonNetworkManager.Instance.MyIdentity)
+        {
+            GameStateManager.Instance.GameState = GameStateManager.Game_State.Idle;
+        }
+        else
+        {
+            GameStateManager.Instance.GameState = GameStateManager.Game_State.OtherPlayerTurn;
+        }
+    }
+
+    void On_RPCReceived_GameStart()
+    {
+        if (PhotonNetworkManager.Instance.MyIdentity == PhotonNetworkManager.Player_Identity.Player1)
+        {
+            GameStateManager.Instance.GameState = GameStateManager.Game_State.Idle;
+        }
+        else
+        {
+            GameStateManager.Instance.GameState = GameStateManager.Game_State.OtherPlayerTurn;
+        }
     }
 }
