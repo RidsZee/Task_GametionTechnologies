@@ -59,18 +59,18 @@ public class RPCManager : MonoBehaviour
 
 
 
-    public void SendRPC_SyncPlayerMovement(int _characterID, CustomDataStructures.CellIndex _targetCellIndex)
+    public void SendRPC_SyncPlayerMovement(int _characterID, CustomDataStructures.CellIndex _currentCellIndex, CustomDataStructures.CellIndex _targetCellIndex, CharacterProperties.Movement_Type _movementType, int _distance)
     {
         if (PhotonNetwork.IsConnected)
         {
-            photonView.RPC(nameof(RPC_SyncPlayerMovement), RpcTarget.AllViaServer, _characterID, _targetCellIndex);
+            photonView.RPC(nameof(RPC_SyncPlayerMovement), RpcTarget.AllViaServer, _characterID, _currentCellIndex, _targetCellIndex, _movementType, _distance);
         }
     }
 
     [PunRPC]
-    void RPC_SyncPlayerMovement(int _characterID, CustomDataStructures.CellIndex _targetCellIndex)
+    void RPC_SyncPlayerMovement(int _characterID, CustomDataStructures.CellIndex _currentCellIndex, CustomDataStructures.CellIndex _targetCellIndex, CharacterProperties.Movement_Type _movementType, int _distance)
     {
-        ActionsContainer.OnSyncCharacterMovement(_characterID, _targetCellIndex);
+        ActionsContainer.OnSyncCharacterMovement(_characterID, _currentCellIndex, _targetCellIndex, _movementType, _distance);
     }
 
 

@@ -38,6 +38,9 @@ MonoBehaviour:
   - DestroyRpc
   - RPC_GameStart
   - RPC_SideSwitch
+  - RPC_SetDefaultsAfterCharacterMovement
+  - RPC_SyncPlayerMovemen
+  - RPC_SyncPlayerMovement
   DisableAutoOpenWizard: 1
-  ShowSettings: 1
+  ShowSettings: 0
   DevRegionSetOnce: 0

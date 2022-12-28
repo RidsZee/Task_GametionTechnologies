@@ -20,6 +20,6 @@ public class ActionsContainer
     public static Action<PhotonNetworkManager.Player_Identity> OnIdentitySet;
     public static Action OnGameStart;
     public static Action<PhotonNetworkManager.Player_Identity> OnPlayerSideSwitch;
-    public static Action<int, CustomDataStructures.CellIndex> OnSyncCharacterMovement;
+    public static Action<int, CustomDataStructures.CellIndex, CustomDataStructures.CellIndex, CharacterProperties.Movement_Type, int> OnSyncCharacterMovement;
     public static Action<CustomDataStructures.CellIndex, CustomDataStructures.CellIndex, int> OnSetDefaultsAfterMovement;
 }

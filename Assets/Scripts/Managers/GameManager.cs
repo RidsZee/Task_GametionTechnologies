@@ -128,7 +128,7 @@ public class GameManager : MonoBehaviour
 
     void MoveCharacterToDestination(CellData _destinationCell)
     {
-        RPCManager.Instance.SendRPC_SyncPlayerMovement(SelectedCharacter.CharacterID, _destinationCell.CellIndex);
+        RPCManager.Instance.SendRPC_SyncPlayerMovement(SelectedCharacter.CharacterID, SelectedCell, _destinationCell.CellIndex, InputDetectedDirection, CellDistance);
 
         GameStateManager.Instance.UpdateGameState(GameStateManager.Game_State.MovingCharacter);
 
@@ -187,13 +187,13 @@ public class GameManager : MonoBehaviour
 
     #region RPC Receivers
 
-    void RPC_Receive_MoveCharacterToDestination(int _characterID, CustomDataStructures.CellIndex _targetCellIndex)
+    void RPC_Receive_MoveCharacterToDestination(int _characterID, CustomDataStructures.CellIndex _currentCellIndex, CustomDataStructures.CellIndex _targetCellIndex, CharacterProperties.Movement_Type _movementDirection, int _cellDistance)
     {
         SelectedCharacter = CharacterManager.Instance.GetCharacterFromCharacterID(_characterID);
 
         GameStateManager.Instance.UpdateGameState(GameStateManager.Game_State.MovingCharacter);
 
-        PathPoints = GridManager.Instance.GetPathPoints(SelectedCell, _targetCellIndex, InputDetectedDirection, CellDistance);
+        PathPoints = GridManager.Instance.GetPathPoints(_currentCellIndex, _targetCellIndex, _movementDirection, _cellDistance);
 
         StartCoroutine(MoveCharacter());
     }
