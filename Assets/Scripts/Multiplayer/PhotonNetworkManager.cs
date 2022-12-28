@@ -93,7 +93,7 @@ public class PhotonNetworkManager : MonoBehaviourPunCallbacks
         UIManager.Instance.gameStatus.Update_PlayerCount((int)PhotonNetwork.CurrentRoom.PlayerCount);
         UIManager.Instance.UpdateGameStatsInUI();
 
-        ActionsContainer.OnIdentitySet?.Invoke(Player_Identity.Player1);
+        ActionsContainer.OnIdentitySet?.Invoke(MyIdentity);
 
         UpdateGameStatus();
     }

@@ -3,10 +3,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Grid Configuration", menuName = "Grid Configuration")]
 public class GridConfiguration : ScriptableObject
 {
-    [Range(6, 50)]
+    [Range(6, 20)]
     public int GridWidth = 6;
 
-    [Range(5, 50)]
+    [Range(5, 20)]
     public int GridLength = 6;
 
     [Range(0.5f, 2.0f)]

@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class CharacterManager : MonoBehaviour
 {
+    public static CharacterManager Instance;
+
     [SerializeField]
     GridConfiguration gridConfig;
 
@@ -29,6 +31,8 @@ public class CharacterManager : MonoBehaviour
         {
             _character.gameObject.SetActive(false);
         }
+
+        Instance = this;
     }
 
     void OnEnable()
@@ -108,5 +112,17 @@ public class CharacterManager : MonoBehaviour
                 _character.CharacterCollider.enabled = true;
             }
         }    
+    }
+
+    public Character GetCharacterFromCharacterID(int _characterID)
+    {
+        if(_characterID <= 5)
+        {
+            return P1Characters[_characterID];
+        }
+        else
+        {
+            return P1Characters[_characterID - 6];
+        }
     }
 }

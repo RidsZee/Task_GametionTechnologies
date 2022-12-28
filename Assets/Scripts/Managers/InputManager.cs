@@ -53,9 +53,9 @@ public class InputManager : MonoBehaviour
                     else if (character.CharacterState == Character.Character_State.Selected)
                     {
                         ActionsContainer.OnCharacterDeSelected?.Invoke(character);
-                        GameStateManager.Instance.UpdateGameState(GameStateManager.Game_State.Idle);
-
                         ActionsContainer.OnAllCharactersDeSelected?.Invoke();
+
+                        GameStateManager.Instance.UpdateGameState(GameStateManager.Game_State.Idle);
                     }
                 }
             }

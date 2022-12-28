@@ -29,7 +29,7 @@ public class UIManager : MonoBehaviour
     bool isWarningActive;
 
     int CurrentLogs;
-    StringBuilder stringBuilder;
+    StringBuilder stringBuilderLogs;
     StringBuilder stringBuilderWarning;
     const string NewLine = "\n";
     const string LogWarning = "Warning : \n";
@@ -50,12 +50,11 @@ public class UIManager : MonoBehaviour
 
         gameStatus.Initialize();
         stringBuilderWarning = new StringBuilder();
+        stringBuilderLogs = new StringBuilder();
     }
 
     void Start()
     {
-        stringBuilder = new StringBuilder();
-        
         UpdateGameStatsInUI(); ;
     }
 
@@ -66,13 +65,15 @@ public class UIManager : MonoBehaviour
 
     public void UpdateMultiplayerLogs(string _newLog)
     {
-        stringBuilder.Append(_newLog).Append(NewLine);
+        stringBuilderLogs.Append(_newLog).Append(NewLine);
+        T_MultiplayerLogs.text = stringBuilderLogs.ToString();
+        
         CurrentLogs++;
 
         if(CurrentLogs > MaxMultiplayerLogs)
         {
             CurrentLogs = 0;
-            stringBuilder.Clear();
+            stringBuilderLogs.Clear();
         }
     }
 
@@ -100,7 +101,7 @@ public class UIManager : MonoBehaviour
             yield return null;
         }
 
-        T_Warning.text = MultiplayerLogsTitle;
+        T_Warning.text = LogWarning;
         isWarningActive = false;
     }
 }

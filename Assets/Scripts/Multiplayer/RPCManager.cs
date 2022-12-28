@@ -19,10 +19,12 @@ public class RPCManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
     }
+
     void Start()
     {
-        GetComponent<PhotonView>();
+        photonView = GetComponent<PhotonView>();
     }
+
 
 
     public void SendRPC_GameStart()
@@ -40,6 +42,7 @@ public class RPCManager : MonoBehaviour
     }
 
 
+
     public void SendRPC_SideSwitch(PhotonNetworkManager.Player_Identity _currnetPlayer)
     {
         if (PhotonNetwork.IsConnected)
@@ -52,5 +55,37 @@ public class RPCManager : MonoBehaviour
     void RPC_SideSwitch(PhotonNetworkManager.Player_Identity _currnetPlayer)
     {
         ActionsContainer.OnPlayerSideSwitch?.Invoke(_currnetPlayer);
+    }
+
+
+
+    public void SendRPC_SyncPlayerMovement(int _characterID, CustomDataStructures.CellIndex _targetCellIndex)
+    {
+        if (PhotonNetwork.IsConnected)
+        {
+            photonView.RPC(nameof(RPC_SyncPlayerMovement), RpcTarget.AllViaServer, _characterID, _targetCellIndex);
+        }
+    }
+
+    [PunRPC]
+    void RPC_SyncPlayerMovement(int _characterID, CustomDataStructures.CellIndex _targetCellIndex)
+    {
+        ActionsContainer.OnSyncCharacterMovement(_characterID, _targetCellIndex);
+    }
+
+
+
+    public void SendRPC_SetDefaultsAfterCharacterMovement(CustomDataStructures.CellIndex _currentCellIndex, CustomDataStructures.CellIndex _targetCellIndex, int _characterIndex)
+    {
+        if (PhotonNetwork.IsConnected)
+        {
+            photonView.RPC(nameof(RPC_SetDefaultsAfterCharacterMovement), RpcTarget.AllViaServer, _currentCellIndex, _targetCellIndex, _characterIndex);
+        }
+    }
+
+    [PunRPC]
+    void RPC_SetDefaultsAfterCharacterMovement(CustomDataStructures.CellIndex _currentCellIndex, CustomDataStructures.CellIndex _targetCellIndex, int _characterIndex)
+    {
+        ActionsContainer.OnSetDefaultsAfterMovement(_currentCellIndex, _targetCellIndex, _characterIndex);
     }
 }

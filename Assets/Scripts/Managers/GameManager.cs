@@ -24,8 +24,10 @@ public class GameManager : MonoBehaviour
         ActionsContainer.OnAllCharactersDeSelected += OnAllCharactersDeSelected;
         ActionsContainer.OnBeginWalking += OnCharacterWalkStarted;
         ActionsContainer.OnCharacterReachedTarget += OnCharacterReachedTarget;
-        ActionsContainer.OnGameStart += On_RPCReceived_GameStart;
-        ActionsContainer.OnPlayerSideSwitch += On_RPCReceived_SwitchSides;
+        ActionsContainer.OnGameStart += RPC_Receive_GameStart;
+        ActionsContainer.OnPlayerSideSwitch += RPC_Receive_SwitchSides;
+        ActionsContainer.OnSyncCharacterMovement += RPC_Receive_MoveCharacterToDestination;
+        ActionsContainer.OnSetDefaultsAfterMovement += RPC_Receive_SetDefaultsAfterCharacterReached;
     }
 
     void OnDisable()
@@ -34,8 +36,10 @@ public class GameManager : MonoBehaviour
         ActionsContainer.OnAllCharactersDeSelected -= OnAllCharactersDeSelected;
         ActionsContainer.OnBeginWalking -= OnCharacterWalkStarted;
         ActionsContainer.OnCharacterReachedTarget -= OnCharacterReachedTarget;
-        ActionsContainer.OnGameStart -= On_RPCReceived_GameStart;
-        ActionsContainer.OnPlayerSideSwitch -= On_RPCReceived_SwitchSides;
+        ActionsContainer.OnGameStart -= RPC_Receive_GameStart;
+        ActionsContainer.OnPlayerSideSwitch -= RPC_Receive_SwitchSides;
+        ActionsContainer.OnSyncCharacterMovement -= RPC_Receive_MoveCharacterToDestination;
+        ActionsContainer.OnSetDefaultsAfterMovement -= RPC_Receive_SetDefaultsAfterCharacterReached;
     }
 
     void OnCharacterSelected(Character _character)
@@ -46,6 +50,7 @@ public class GameManager : MonoBehaviour
 
         GridManager.Instance.GetCellData_From_CellIndex(SelectedCell).SetHighlightColor(gridConfig.MatHighlight);
         UIManager.Instance.gameStatus.Update_SelectedCharacter(_character.characterProperties.CharacterType);
+        UIManager.Instance.UpdateGameStatsInUI();
     }
 
     void OnAllCharactersDeSelected()
@@ -53,6 +58,7 @@ public class GameManager : MonoBehaviour
         SelectedCharacter = null;
         GridManager.Instance.GetCellData_From_CellIndex(SelectedCell).SetDefaultColor();
         UIManager.Instance.gameStatus.SelectedCharacter = None;
+        UIManager.Instance.UpdateGameStatsInUI();
     }
 
     void OnCharacterWalkStarted(CellData _cellData)
@@ -117,8 +123,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
+    #region Character movement
+
     void MoveCharacterToDestination(CellData _destinationCell)
     {
+        RPCManager.Instance.SendRPC_SyncPlayerMovement(SelectedCharacter.CharacterID, _destinationCell.CellIndex);
+
         GameStateManager.Instance.UpdateGameState(GameStateManager.Game_State.MovingCharacter);
 
         PathPoints = GridManager.Instance.GetPathPoints(SelectedCell, _destinationCell.CellIndex, InputDetectedDirection, CellDistance);
@@ -145,7 +156,10 @@ public class GameManager : MonoBehaviour
             Distance++;
         }
 
-        ActionsContainer.OnCharacterReachedTarget?.Invoke();
+        if (PhotonNetworkManager.Instance.CurrentTurnPlayer == PhotonNetworkManager.Instance.MyIdentity)
+        {
+            ActionsContainer.OnCharacterReachedTarget?.Invoke();
+        }
     }
 
     void OnCharacterReachedTarget()
@@ -156,15 +170,52 @@ public class GameManager : MonoBehaviour
         SelectedCharacter.DoOccupyCell(TargetCellData.CellIndex);
         SelectedCharacter.CharacterState = Character.Character_State.Idle;
 
-        if(PhotonNetworkManager.Instance.isMaster)
+        SelectedCharacter = null;
+        UIManager.Instance.gameStatus.SelectedCharacter = None;
+        UIManager.Instance.UpdateGameStatsInUI();
+
+        RPCManager.Instance.SendRPC_SetDefaultsAfterCharacterMovement(CurrentCellData.CellIndex, TargetCellData.CellIndex, SelectedCharacter.CharacterID);
+
+        if (PhotonNetworkManager.Instance.CurrentTurnPlayer == PhotonNetworkManager.Instance.MyIdentity)
         {
             PhotonNetworkManager.Instance.Call_SwitchSides();
         }
     }
 
-    void On_RPCReceived_SwitchSides(PhotonNetworkManager.Player_Identity CurrentPlayer)
+    #endregion
+
+
+    #region RPC Receivers
+
+    void RPC_Receive_MoveCharacterToDestination(int _characterID, CustomDataStructures.CellIndex _targetCellIndex)
     {
-        if(CurrentPlayer == PhotonNetworkManager.Instance.MyIdentity)
+        SelectedCharacter = CharacterManager.Instance.GetCharacterFromCharacterID(_characterID);
+
+        GameStateManager.Instance.UpdateGameState(GameStateManager.Game_State.MovingCharacter);
+
+        PathPoints = GridManager.Instance.GetPathPoints(SelectedCell, _targetCellIndex, InputDetectedDirection, CellDistance);
+
+        StartCoroutine(MoveCharacter());
+    }
+
+    void RPC_Receive_SetDefaultsAfterCharacterReached(CustomDataStructures.CellIndex _currentCellIndex, CustomDataStructures.CellIndex _targetCellIndex, int _characterIndex)
+    {
+        CurrentCellData = GridManager.Instance.GetCellData_From_CellIndex(_currentCellIndex);
+        CurrentCellData.SetDefaultColor();
+        CurrentCellData.isOccupied = false;
+
+        TargetCellData = GridManager.Instance.GetCellData_From_CellIndex(_targetCellIndex);
+        TargetCellData.SetDefaultColor();
+        
+        SelectedCharacter = CharacterManager.Instance.GetCharacterFromCharacterID(_characterIndex);
+        SelectedCharacter.DoOccupyCell(TargetCellData.CellIndex);
+        SelectedCharacter.CharacterState = Character.Character_State.Idle;
+        SelectedCharacter = null;
+    }
+
+    void RPC_Receive_SwitchSides(PhotonNetworkManager.Player_Identity _currentPlayer)
+    {
+        if(_currentPlayer == PhotonNetworkManager.Instance.MyIdentity)
         {
             GameStateManager.Instance.UpdateGameState(GameStateManager.Game_State.Idle);
         }
@@ -173,19 +224,24 @@ public class GameManager : MonoBehaviour
             GameStateManager.Instance.UpdateGameState(GameStateManager.Game_State.OtherPlayerTurn);
         }
 
-        UIManager.Instance.gameStatus.Update_CurrentPlayer(CurrentPlayer);
+        PhotonNetworkManager.Instance.CurrentTurnPlayer = _currentPlayer;
+        UIManager.Instance.gameStatus.Update_CurrentPlayer(_currentPlayer);
         UIManager.Instance.UpdateGameStatsInUI();
     }
 
-    void On_RPCReceived_GameStart()
+    void RPC_Receive_GameStart()
     {
         if (PhotonNetworkManager.Instance.MyIdentity == PhotonNetworkManager.Player_Identity.Player1)
         {
             GameStateManager.Instance.UpdateGameState(GameStateManager.Game_State.Idle);
+            PhotonNetworkManager.Instance.CurrentTurnPlayer = PhotonNetworkManager.Player_Identity.Player1;
         }
         else
         {
             GameStateManager.Instance.UpdateGameState(GameStateManager.Game_State.OtherPlayerTurn);
+            PhotonNetworkManager.Instance.CurrentTurnPlayer = PhotonNetworkManager.Player_Identity.Player2;
         }
     }
+
+    #endregion
 }
