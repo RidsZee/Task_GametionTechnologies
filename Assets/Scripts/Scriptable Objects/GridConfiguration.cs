@@ -3,14 +3,14 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Grid Configuration", menuName = "Grid Configuration")]
 public class GridConfiguration : ScriptableObject
 {
-    [Range(6, 20)]
+    [Range(6, 15)]
     public int GridWidth = 6;
 
-    [Range(5, 20)]
+    [Range(5, 15)]
     public int GridLength = 6;
 
     [Range(0.5f, 2.0f)]
-    public float TileSize = 0.5f;
+    public float CellSize = 0.5f;
 
     [Range(0, 1.0f)]
     public float GridGap = 0.1f;

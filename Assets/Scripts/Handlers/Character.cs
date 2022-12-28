@@ -37,7 +37,7 @@ public class Character : MonoBehaviour, IPlayerAttack, IPlayerDefend, IPlayerWal
 
     void Start()
     {
-        Vector3 mySize = Vector3.one * (gridConfig.TileSize * gridConfig.CharacterRelativeSize);
+        Vector3 mySize = Vector3.one * (gridConfig.CellSize * gridConfig.CharacterRelativeSize);
         transform.localScale = mySize;
         SetDimColor();
     }
@@ -65,8 +65,6 @@ public class Character : MonoBehaviour, IPlayerAttack, IPlayerDefend, IPlayerWal
 
                 if (characterProperties.doWalk)
                 {
-                    //
-                    UIManager.Instance.UpdateMultiplayerLogs("R");
                     ActionsContainer.OnWalk += DoWalk;
                     ActionsContainer.OnOccupyCell += DoOccupyCell;
                 }

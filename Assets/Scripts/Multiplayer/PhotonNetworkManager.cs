@@ -16,7 +16,7 @@ public class PhotonNetworkManager : MonoBehaviourPunCallbacks
     const string LogWaiting = "Room Joined. Waiting for the opponent...";
     const string LogJoinFailed = "Room join failed";
     const string LogCreateFailed = "Room create failed";
-    const string LogGameStart = "Opponent joined. Game Started";
+    const string LogGameStart = "Game Started";
     const string LogOpponentDisconnected = "Opponent disconnected";
     const string LogOpponentJoined = "Opponent joined";
     const string LogDisconnected = "Disconnected from server";

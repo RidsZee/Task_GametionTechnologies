@@ -14,9 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GridWidth: 8
   GridLength: 8
-  TileSize: 0.5
-  GridGap: 0.05
+  CellSize: 0.7
+  GridGap: 0.1
   HighlightWrongCell: 0.5
+  CharacterRelativeSize: 0.85
+  CharacterMovementSpeed: 0.5
   AlternateCellColor: 1
   Mat1: {fileID: 2100000, guid: e56bb6d562cd64a4a808831b0b1b2411, type: 2}
   Mat2: {fileID: 2100000, guid: 8aa5d3aaaf1600049a4bdd8cf946dc05, type: 2}

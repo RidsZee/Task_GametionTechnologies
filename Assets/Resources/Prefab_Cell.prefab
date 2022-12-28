@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -2801565036105037169}
   - component: {fileID: 38754808667533607}
   m_Layer: 6
-  m_Name: Prefab_Tile
+  m_Name: Prefab_Cell
   m_TagString: Cell
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

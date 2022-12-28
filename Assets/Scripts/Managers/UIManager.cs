@@ -35,6 +35,7 @@ public class UIManager : MonoBehaviour
     const string LogWarning = "Warning : \n";
     const string MultiplayerLogsTitle = "Multiplayer logs: \n\n";
     const string GameStatsTitle = "Game stats: \n\n";
+    const string Separator = " | ";
 
     void Awake()
     {
@@ -55,7 +56,8 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
-        UpdateGameStatsInUI(); ;
+        UpdateGameStatsInUI();
+        stringBuilderLogs.Append(MultiplayerLogsTitle);
     }
 
     public void UpdateGameStatsInUI()
@@ -65,15 +67,16 @@ public class UIManager : MonoBehaviour
 
     public void UpdateMultiplayerLogs(string _newLog)
     {
-        stringBuilderLogs.Append(_newLog).Append(NewLine);
-        T_MultiplayerLogs.text = stringBuilderLogs.ToString();
-        
         CurrentLogs++;
 
+        stringBuilderLogs.Append(CurrentLogs.ToString()).Append(Separator).Append(_newLog).Append(NewLine);
+        T_MultiplayerLogs.text = stringBuilderLogs.ToString();
+        
         if(CurrentLogs > MaxMultiplayerLogs)
         {
             CurrentLogs = 0;
             stringBuilderLogs.Clear();
+            stringBuilderLogs.Append(MultiplayerLogsTitle);
         }
     }
 

@@ -3,34 +3,34 @@ using UnityEngine;
 
 public class GridGenerator : MonoBehaviour
 {
-    [Header("Tile Grid Generator")]
+    [Header("Grid Cell Generator")]
 
     [SerializeField]
     GridConfiguration gridConfig;
 
     [SerializeField]
-    Transform TileInitPosition;
+    Transform CellInitPosition;
     
     [Range(5, 50)] 
-    public int TilesGenerationPerFrame = 5; // Determines how many tiles to generate per frame
+    public int CellsGenerationPerFrame = 5; // Determines how many Cells to generate per frame
     
-    GameObject TilePrefab; // The original prefab gameobject
-    GameObject TilePrefabScaled; // Modified prefab to instantiate for tiles
-    Vector3 TileScale;
-    Vector3 NextPosition; // Holds position to place the next tile
+    GameObject CellPrefab; // The original prefab gameobject
+    GameObject CellPrefabScaled; // Modified prefab to instantiate for Cells
+    Vector3 CellScale;
+    Vector3 NextPosition; // Holds position to place the next Cell
     
-    int CurrentTilesPerFrame;
-    int TotalTiles;
+    int CurrentCellsPerFrame;
+    int TotalCells;
     int CurrentWidth;
-    int CurrentCell; // Pre calculated value <TileWidth + gap> for next tile placement
+    int CurrentCell; // Pre calculated value <CellWidth + gap> for next Cell placement
     int CurrentLength;
     float PositionOffset;
     bool isColor1;
     
-    const string CellPrefabName = "Prefab_Tile";
+    const string CellPrefabName = "Prefab_Cell";
     const string CellNamePrefix = "Cell_";
     const string WarningReferences = "Required fields are not assigned in the inspector!";
-    const string WarningCellData = "CellData component not attached to Tile Prefab";
+    const string WarningCellData = "CellData component not attached to Cell Prefab";
 
     Coroutine coroutineGenerateGrid;
 
@@ -43,58 +43,58 @@ public class GridGenerator : MonoBehaviour
     {
         GameStateManager.Instance.UpdateGameState(GameStateManager.Game_State.GeneratingGrid);
 
-        TilePrefab = Resources.Load(CellPrefabName) as GameObject;
+        CellPrefab = Resources.Load(CellPrefabName) as GameObject;
 
         // Validation checks
-        if(!TilePrefab || !TileInitPosition || !gridConfig || !GridManager.Instance.cellDataContainer)
+        if(!CellPrefab || !CellInitPosition || !gridConfig || !GridManager.Instance.cellDataContainer)
         {
             UIManager.Instance.ShowWarning(WarningReferences);
             return;
         }
 
-        if(TilePrefab && !TilePrefab.GetComponent<CellData>())
+        if(CellPrefab && !CellPrefab.GetComponent<CellData>())
         {
             UIManager.Instance.ShowWarning(WarningCellData);
             return;
         }
 
-        PositionOffset = gridConfig.TileSize + gridConfig.GridGap;
+        PositionOffset = gridConfig.CellSize + gridConfig.GridGap;
 
-        // Scale the tile prefab according to the config and spawn scaled tiles for the grid
-        TilePrefabScaled = Instantiate(TilePrefab);
-        TileScale.x = gridConfig.TileSize;
-        TileScale.y = TilePrefabScaled.transform.localScale.y;
-        TileScale.z = gridConfig.TileSize;
-        TilePrefabScaled.transform.localScale = TileScale;
+        // Scale the Cell prefab according to the config and spawn scaled Cells for the grid
+        CellPrefabScaled = Instantiate(CellPrefab);
+        CellScale.x = gridConfig.CellSize;
+        CellScale.y = CellPrefabScaled.transform.localScale.y;
+        CellScale.z = gridConfig.CellSize;
+        CellPrefabScaled.transform.localScale = CellScale;
 
-        TotalTiles = gridConfig.GridWidth * gridConfig.GridLength;
+        TotalCells = gridConfig.GridWidth * gridConfig.GridLength;
         CurrentLength = 0;
         CurrentWidth = 0;
         CurrentCell = 0;
         isColor1 = false;
 
         // Store the reference of all Cell's <CellData> component
-        GridManager.Instance.cellDataContainer.AllCells = new CellData[TotalTiles];
+        GridManager.Instance.cellDataContainer.AllCells = new CellData[TotalCells];
 
-        // Set start position of the 1st tile
-        NextPosition = TileInitPosition.position;
+        // Set start position of the 1st Cell
+        NextPosition = CellInitPosition.position;
 
-        DefineTilesPerFrame();
+        DefineCellsPerFrame();
         coroutineGenerateGrid = StartCoroutine(GenerateGrid());
     }
 
     IEnumerator GenerateGrid()
     {
-        while (TotalTiles > 0)
+        while (TotalCells > 0)
         {
-            // Generate <CurrentTilesPerFrame> number of tiles per frame
-            while (CurrentTilesPerFrame > 0)
+            // Generate <CurrentCellsPerFrame> number of Cells per frame
+            while (CurrentCellsPerFrame > 0)
             {
                 // Current row is completed, calculate values for next row.
                 if (CurrentWidth == gridConfig.GridWidth)
                 {
                     NextPosition.z += PositionOffset;
-                    NextPosition.x = TileInitPosition.position.x;
+                    NextPosition.x = CellInitPosition.position.x;
                     CurrentLength++;
 
                     CurrentWidth = 0;
@@ -109,8 +109,8 @@ public class GridGenerator : MonoBehaviour
                     }
                 }
 
-                // Instantiate the scaled tile object at next <TargetPosition>
-                GameObject G = Instantiate(TilePrefabScaled, NextPosition, Quaternion.identity, TileInitPosition);
+                // Instantiate the scaled Cell object at next <TargetPosition>
+                GameObject G = Instantiate(CellPrefabScaled, NextPosition, Quaternion.identity, CellInitPosition);
                 
                 // Initialize CellData values
                 CellData _cellData = G.GetComponent<CellData>();
@@ -130,31 +130,31 @@ public class GridGenerator : MonoBehaviour
                 }
 
                 NextPosition.x += PositionOffset;
-                CurrentTilesPerFrame--;
+                CurrentCellsPerFrame--;
                 CurrentWidth++;
-                TotalTiles--;
+                TotalCells--;
                 CurrentCell++;
             }
 
-            DefineTilesPerFrame();
+            DefineCellsPerFrame();
 
             // Current frame is rendered, wait for the next frame
             yield return null;
         }
 
-        TilePrefabScaled.SetActive(false);
+        CellPrefabScaled.SetActive(false);
         ActionsContainer.OnGridGenerationCompleted?.Invoke();
         PhotonNetworkManager.Instance.Call_ConnectToServer();
     }
 
-    // Define required Tiles-Generation-Per-Frame
-    void DefineTilesPerFrame()
+    // Define required Cells-Generation-Per-Frame
+    void DefineCellsPerFrame()
     {
-        CurrentTilesPerFrame = TilesGenerationPerFrame;
+        CurrentCellsPerFrame = CellsGenerationPerFrame;
 
-        if (CurrentTilesPerFrame > TotalTiles)
+        if (CurrentCellsPerFrame > TotalCells)
         {
-            CurrentTilesPerFrame = TotalTiles;
+            CurrentCellsPerFrame = TotalCells;
         }
     }
 }
