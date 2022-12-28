@@ -30,7 +30,9 @@ public class UIManager : MonoBehaviour
 
     int CurrentLogs;
     StringBuilder stringBuilder;
+    StringBuilder stringBuilderWarning;
     const string NewLine = "\n";
+    const string LogWarning = "Warning : \n";
     const string MultiplayerLogsTitle = "Multiplayer logs: \n\n";
     const string GameStatsTitle = "Game stats: \n\n";
 
@@ -45,13 +47,16 @@ public class UIManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
+
+        gameStatus.Initialize();
+        stringBuilderWarning = new StringBuilder();
     }
 
     void Start()
     {
-        T_Warning.text = MultiplayerLogsTitle;
         stringBuilder = new StringBuilder();
-        gameStatus.Initialize();
+        
+        UpdateGameStatsInUI(); ;
     }
 
     public void UpdateGameStatsInUI()
@@ -78,7 +83,8 @@ public class UIManager : MonoBehaviour
             StopCoroutine(WarningCoroutine);
         }
 
-        T_Warning.text = _warning;
+        stringBuilderWarning.Clear();
+        T_Warning.text = stringBuilderWarning.Append(LogWarning).Append(_warning).ToString();
         WarningCoroutine = StartCoroutine(Coroutine_WarningTimer());
     }
 

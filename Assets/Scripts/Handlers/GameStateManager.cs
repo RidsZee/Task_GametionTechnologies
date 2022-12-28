@@ -17,7 +17,7 @@ public class GameStateManager : MonoBehaviour
         Disconnected
     }
 
-    public Game_State GameState;
+    public Game_State GameState { get; private set; }
 
     public static GameStateManager Instance;
 
@@ -32,5 +32,12 @@ public class GameStateManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
+    }
+
+    public void UpdateGameState(Game_State _newState)
+    {
+        GameState = _newState;
+        UIManager.Instance.gameStatus.Update_GameState(_newState);
+        UIManager.Instance.UpdateGameStatsInUI();
     }
 }

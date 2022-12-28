@@ -46,15 +46,18 @@ public class PhotonNetworkManager : MonoBehaviourPunCallbacks
     public void Call_ConnectToServer()
     {
         UIManager.Instance.UpdateMultiplayerLogs(LogConnecting);
-        GameStateManager.Instance.GameState = GameStateManager.Game_State.ConnectingToServer;
+        GameStateManager.Instance.UpdateGameState(GameStateManager.Game_State.ConnectingToServer);
         PhotonNetwork.ConnectUsingSettings();
     }
 
     public override void OnConnectedToMaster()
     {
         UIManager.Instance.UpdateMultiplayerLogs(LogJoining);
-        GameStateManager.Instance.GameState = GameStateManager.Game_State.JoiningRoom;
+        GameStateManager.Instance.UpdateGameState(GameStateManager.Game_State.JoiningRoom);
         PhotonNetwork.JoinRandomOrCreateRoom();
+
+        UIManager.Instance.gameStatus.Update_isConnected(true);
+        UIManager.Instance.UpdateGameStatsInUI();
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
@@ -63,7 +66,7 @@ public class PhotonNetworkManager : MonoBehaviourPunCallbacks
 
         if (RoomFailedAttempt > 0)
         {
-            GameStateManager.Instance.GameState = GameStateManager.Game_State.JoiningRoom;
+            GameStateManager.Instance.UpdateGameState(GameStateManager.Game_State.JoiningRoom);
             PhotonNetwork.JoinRandomOrCreateRoom();
             RoomFailedAttempt--;
         }
@@ -83,7 +86,12 @@ public class PhotonNetworkManager : MonoBehaviourPunCallbacks
             {
                 MyIdentity = Player_Identity.Player2;
             }
+
+            UIManager.Instance.gameStatus.Update_YourIdentity(MyIdentity);
         }
+
+        UIManager.Instance.gameStatus.Update_PlayerCount((int)PhotonNetwork.CurrentRoom.PlayerCount);
+        UIManager.Instance.UpdateGameStatsInUI();
 
         ActionsContainer.OnIdentitySet?.Invoke(Player_Identity.Player1);
 
@@ -99,25 +107,34 @@ public class PhotonNetworkManager : MonoBehaviourPunCallbacks
     {
         UIManager.Instance.UpdateMultiplayerLogs(LogOpponentJoined);
         UpdateGameStatus();
+
+        UIManager.Instance.gameStatus.Update_PlayerCount(PhotonNetwork.CurrentRoom.PlayerCount);
+        UIManager.Instance.UpdateGameStatsInUI();
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         UIManager.Instance.UpdateMultiplayerLogs(LogOpponentDisconnected);
-        GameStateManager.Instance.GameState = GameStateManager.Game_State.OpponentDisconnected;
+        GameStateManager.Instance.UpdateGameState(GameStateManager.Game_State.OpponentDisconnected);
+
+        UIManager.Instance.gameStatus.Update_PlayerCount(PhotonNetwork.CurrentRoom.PlayerCount);
+        UIManager.Instance.UpdateGameStatsInUI();
     }
 
     public override void OnDisconnected(DisconnectCause cause)
     {
-        GameStateManager.Instance.GameState = GameStateManager.Game_State.Disconnected;
+        GameStateManager.Instance.UpdateGameState(GameStateManager.Game_State.Disconnected);
         UIManager.Instance.UpdateMultiplayerLogs(LogDisconnected);
+
+        UIManager.Instance.gameStatus.Update_isConnected(false);
+        UIManager.Instance.UpdateGameStatsInUI();
     }
 
     void UpdateGameStatus()
     {
         if(PhotonNetwork.CurrentRoom.PlayerCount == 1)
         {
-            GameStateManager.Instance.GameState = GameStateManager.Game_State.WaitingForOpponent;
+            GameStateManager.Instance.UpdateGameState(GameStateManager.Game_State.WaitingForOpponent);
             UIManager.Instance.UpdateMultiplayerLogs(LogWaiting);
         }
         else if(PhotonNetwork.CurrentRoom.PlayerCount > 1)
@@ -126,22 +143,22 @@ public class PhotonNetworkManager : MonoBehaviourPunCallbacks
 
             if (isMaster && GameStateManager.Instance.GameState == GameStateManager.Game_State.WaitingForOpponent)
             {
-                // Call RPC for game start
+                RPCManager.Instance.SendRPC_GameStart();
             }
         }
     }
 
     public void Call_SwitchSides()
     {
-        if (Instance.CurrentTurnPlayer == Player_Identity.Player1)
+        if (CurrentTurnPlayer == Player_Identity.Player1)
         {
-            Instance.CurrentTurnPlayer = Player_Identity.Player2;
+            CurrentTurnPlayer = Player_Identity.Player2;
         }
         else
         {
-            Instance.CurrentTurnPlayer = Player_Identity.Player1;
+            CurrentTurnPlayer = Player_Identity.Player1;
         }
 
-        // Send RPC for switching sides
+        RPCManager.Instance.SendRPC_SideSwitch(CurrentTurnPlayer);
     }
 }

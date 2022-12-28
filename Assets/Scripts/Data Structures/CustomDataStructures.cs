@@ -18,6 +18,7 @@ public class CustomDataStructures
         public string YourIdentity;
         public string CurrentPlayer;
         public string SelectedCharacter;
+        public string GameState;
 
         StringBuilder stringBuilder;
         const string NewLine = "\n";
@@ -27,16 +28,18 @@ public class CustomDataStructures
         const string name_YourIdentity = "You are : ";
         const string name_CurrentPlayer = "Current Turn : ";
         const string name_SelectedCharacter = "Selected Character : ";
+        const string name_GameState = "State : ";
 
         public void Initialize()
         {
-            stringBuilder = new System.Text.StringBuilder();
+            stringBuilder = new StringBuilder();
 
             isConnected = "False";
             PlayerCount = "None";
             YourIdentity = "None";
             CurrentPlayer = "None";
             SelectedCharacter = "None";
+            GameState = "None";
         }
         public void Update_isConnected(bool _value)
         {
@@ -45,26 +48,36 @@ public class CustomDataStructures
 
         public void Update_PlayerCount(int _value)
         {
-            isConnected = _value.ToString();
+            PlayerCount = _value.ToString();
         }
 
         public void Update_YourIdentity(PhotonNetworkManager.Player_Identity _value)
         {
-            isConnected = _value.ToString();
+            YourIdentity = _value.ToString();
         }
 
         public void Update_CurrentPlayer(PhotonNetworkManager.Player_Identity _value)
         {
-            isConnected = _value.ToString();
+            CurrentPlayer = _value.ToString();
         }
 
         public void Update_SelectedCharacter(CharacterProperties.Character_Type _value)
         {
-            isConnected = _value.ToString();
+            SelectedCharacter = _value.ToString();
+        }
+
+        public void Update_GameState(GameStateManager.Game_State _value)
+        {
+            GameState = _value.ToString();
         }
 
         public string ShowCombinedGameStatus(string _title)
         {
+            if(stringBuilder.Length != 0)
+            {
+                stringBuilder.Clear();
+            }
+
             return stringBuilder
                 .Append(_title)
                 .Append(name_isConnected).Append(isConnected).Append(NewLine)
@@ -72,6 +85,7 @@ public class CustomDataStructures
                 .Append(name_YourIdentity).Append(YourIdentity).Append(NewLine)
                 .Append(name_CurrentPlayer).Append(CurrentPlayer).Append(NewLine)
                 .Append(name_SelectedCharacter).Append(SelectedCharacter).Append(NewLine)
+                .Append(name_GameState).Append(GameState).Append(NewLine)
                 .ToString();
         }
     }

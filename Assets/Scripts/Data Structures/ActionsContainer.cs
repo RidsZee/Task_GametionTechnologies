@@ -19,6 +19,5 @@ public class ActionsContainer
     public static Action OnConnectedToNetwork;
     public static Action<PhotonNetworkManager.Player_Identity> OnIdentitySet;
     public static Action OnGameStart;
-
-    // RPCs
+    public static Action<PhotonNetworkManager.Player_Identity> OnPlayerSideSwitch;
 }

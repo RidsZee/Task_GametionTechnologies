@@ -14,12 +14,18 @@ public class GameManager : MonoBehaviour
     CellData TargetCellData;
     Vector3[] PathPoints;
 
+    const string Warning1 = "Destination is out of character's reach!";
+    const string Warning2 = "Invalid Cell for the selected character";
+    const string None = "None";
+
     void OnEnable()
     {
         ActionsContainer.OnCharacterSelected += OnCharacterSelected;
         ActionsContainer.OnAllCharactersDeSelected += OnAllCharactersDeSelected;
         ActionsContainer.OnBeginWalking += OnCharacterWalkStarted;
         ActionsContainer.OnCharacterReachedTarget += OnCharacterReachedTarget;
+        ActionsContainer.OnGameStart += On_RPCReceived_GameStart;
+        ActionsContainer.OnPlayerSideSwitch += On_RPCReceived_SwitchSides;
     }
 
     void OnDisable()
@@ -28,6 +34,8 @@ public class GameManager : MonoBehaviour
         ActionsContainer.OnAllCharactersDeSelected -= OnAllCharactersDeSelected;
         ActionsContainer.OnBeginWalking -= OnCharacterWalkStarted;
         ActionsContainer.OnCharacterReachedTarget -= OnCharacterReachedTarget;
+        ActionsContainer.OnGameStart -= On_RPCReceived_GameStart;
+        ActionsContainer.OnPlayerSideSwitch -= On_RPCReceived_SwitchSides;
     }
 
     void OnCharacterSelected(Character _character)
@@ -44,7 +52,7 @@ public class GameManager : MonoBehaviour
     {
         SelectedCharacter = null;
         GridManager.Instance.GetCellData_From_CellIndex(SelectedCell).SetDefaultColor();
-        UIManager.Instance.gameStatus.SelectedCharacter = "None";
+        UIManager.Instance.gameStatus.SelectedCharacter = None;
     }
 
     void OnCharacterWalkStarted(CellData _cellData)
@@ -99,20 +107,20 @@ public class GameManager : MonoBehaviour
             else
             {
                 TargetCellData.SetWrongColor(gridConfig.MatWrongCell, gridConfig.HighlightWrongCell);
-                Debug.LogWarning("Destination is out of character's reach | Character's max steps : " + CharacterMaxSteps + ", Input distance : " + CellDistance);
+                UIManager.Instance.ShowWarning(Warning1);
             }
         }
         else
         {
             TargetCellData.SetWrongColor(gridConfig.MatWrongCell, gridConfig.HighlightWrongCell);
-            Debug.LogWarning("Movement does not match | Current input movement : " + InputDetectedDirection);
+            UIManager.Instance.ShowWarning(Warning2);
         }
     }
 
     void MoveCharacterToDestination(CellData _destinationCell)
     {
-        GameStateManager.Instance.GameState = GameStateManager.Game_State.MovingCharacter;
-        
+        GameStateManager.Instance.UpdateGameState(GameStateManager.Game_State.MovingCharacter);
+
         PathPoints = GridManager.Instance.GetPathPoints(SelectedCell, _destinationCell.CellIndex, InputDetectedDirection, CellDistance);
 
         StartCoroutine(MoveCharacter());
@@ -158,23 +166,26 @@ public class GameManager : MonoBehaviour
     {
         if(CurrentPlayer == PhotonNetworkManager.Instance.MyIdentity)
         {
-            GameStateManager.Instance.GameState = GameStateManager.Game_State.Idle;
+            GameStateManager.Instance.UpdateGameState(GameStateManager.Game_State.Idle);
         }
         else
         {
-            GameStateManager.Instance.GameState = GameStateManager.Game_State.OtherPlayerTurn;
+            GameStateManager.Instance.UpdateGameState(GameStateManager.Game_State.OtherPlayerTurn);
         }
+
+        UIManager.Instance.gameStatus.Update_CurrentPlayer(CurrentPlayer);
+        UIManager.Instance.UpdateGameStatsInUI();
     }
 
     void On_RPCReceived_GameStart()
     {
         if (PhotonNetworkManager.Instance.MyIdentity == PhotonNetworkManager.Player_Identity.Player1)
         {
-            GameStateManager.Instance.GameState = GameStateManager.Game_State.Idle;
+            GameStateManager.Instance.UpdateGameState(GameStateManager.Game_State.Idle);
         }
         else
         {
-            GameStateManager.Instance.GameState = GameStateManager.Game_State.OtherPlayerTurn;
+            GameStateManager.Instance.UpdateGameState(GameStateManager.Game_State.OtherPlayerTurn);
         }
     }
 }

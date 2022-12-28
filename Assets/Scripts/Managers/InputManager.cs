@@ -15,6 +15,7 @@ public class InputManager : MonoBehaviour
 
     const string TagCells = "Cell";
     const string TagCharacters = "Character";
+    const string TargetCell = "Target cell is occupied";
 
     public void OnTouchClick()
     {
@@ -36,7 +37,7 @@ public class InputManager : MonoBehaviour
                         }
                         else
                         {
-                            Debug.LogWarning("Target cell is occupied");
+                            UIManager.Instance.ShowWarning(TargetCell);
                         }
                     }
                 }
@@ -47,12 +48,13 @@ public class InputManager : MonoBehaviour
                     if (character.CharacterState == Character.Character_State.Idle)
                     {
                         ActionsContainer.OnCharacterSelected?.Invoke(character);
-                        GameStateManager.Instance.GameState = GameStateManager.Game_State.CharacterSelected;
+                        GameStateManager.Instance.UpdateGameState(GameStateManager.Game_State.CharacterSelected);
                     }
                     else if (character.CharacterState == Character.Character_State.Selected)
                     {
                         ActionsContainer.OnCharacterDeSelected?.Invoke(character);
-                        GameStateManager.Instance.GameState = GameStateManager.Game_State.Idle;
+                        GameStateManager.Instance.UpdateGameState(GameStateManager.Game_State.Idle);
+
                         ActionsContainer.OnAllCharactersDeSelected?.Invoke();
                     }
                 }

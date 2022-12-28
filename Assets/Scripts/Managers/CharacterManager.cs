@@ -16,6 +16,8 @@ public class CharacterManager : MonoBehaviour
     int CurrentIndex;
     CustomDataStructures.CellIndex currentCellIndex;
 
+    const string Warning1 = "Required fields not assigned in <CharacterManager> to place characters";
+
     void Awake()
     {
         foreach (Character _character in P1Characters)
@@ -45,7 +47,7 @@ public class CharacterManager : MonoBehaviour
     {
         if(!gridConfig || P1Characters.Length == 0 || P2Characters.Length == 0)
         {
-            Debug.LogWarning("Required fields not assigned in " + name + " to place characters");
+            UIManager.Instance.ShowWarning(Warning1);
             return;
         }
 

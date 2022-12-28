@@ -41,20 +41,20 @@ public class GridGenerator : MonoBehaviour
 
     void StartGeneratingGrid()
     {
-        GameStateManager.Instance.GameState = GameStateManager.Game_State.GeneratingGrid;
+        GameStateManager.Instance.UpdateGameState(GameStateManager.Game_State.GeneratingGrid);
 
         TilePrefab = Resources.Load(CellPrefabName) as GameObject;
 
         // Validation checks
         if(!TilePrefab || !TileInitPosition || !gridConfig || !GridManager.Instance.cellDataContainer)
         {
-            Debug.LogWarning(WarningReferences);
+            UIManager.Instance.ShowWarning(WarningReferences);
             return;
         }
 
         if(TilePrefab && !TilePrefab.GetComponent<CellData>())
         {
-            Debug.LogWarning(WarningCellData);
+            UIManager.Instance.ShowWarning(WarningCellData);
             return;
         }
 
