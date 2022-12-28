@@ -1,11 +1,23 @@
+/// <Sumery>
+/// This class is responsible for:
+/// 1. Sending all RPC calls and raising associated Action Events
+/// </Summery>
+
 using UnityEngine;
 using Photon.Pun;
 
 [RequireComponent(typeof(PhotonView))]
 public class RPCManager : MonoBehaviour
 {
+    #region Variables
+
     public static RPCManager Instance;
     PhotonView photonView;
+
+    #endregion
+
+
+    #region Initialization
 
     void Awake()
     {
@@ -25,7 +37,10 @@ public class RPCManager : MonoBehaviour
         photonView = GetComponent<PhotonView>();
     }
 
+    #endregion
 
+
+    #region RPC Start the Game
 
     public void SendRPC_GameStart()
     {
@@ -41,7 +56,10 @@ public class RPCManager : MonoBehaviour
         ActionsContainer.OnGameStart?.Invoke();
     }
 
+    #endregion
 
+
+    #region RPC Sync Player Turn Switch
 
     public void SendRPC_SideSwitch(PhotonNetworkManager.Player_Identity _currnetPlayer)
     {
@@ -57,7 +75,10 @@ public class RPCManager : MonoBehaviour
         ActionsContainer.OnPlayerSideSwitch?.Invoke(_currnetPlayer);
     }
 
+    #endregion
 
+
+    #region RPC Sync Player Movement
 
     public void SendRPC_SyncPlayerMovement(int _characterID, Vector3[] _pathPoints, int _cellDistance, int _currentCellIndex_H, int _currentCellIndex_V, int _targetCellIndex_H, int _targetCellIndex_V)
     {
@@ -72,4 +93,6 @@ public class RPCManager : MonoBehaviour
     {
         ActionsContainer.OnSyncCharacterMovement(_characterID, _pathPoints, _cellDistance, _currentCellIndex_H, _currentCellIndex_V, _targetCellIndex_H, _targetCellIndex_V);
     }
+
+    #endregion
 }

@@ -1,24 +1,34 @@
+/// <Sumery>
+/// This class is responsible for:
+/// 1. All grid related operations like calculating distance, finding route, checking directions, forming paths etc
+/// 2. Processing and returning cell data <CellData> based on cell identities like CellIndex
+/// </Summery>
+
 using UnityEngine;
 
 public class GridManager : MonoBehaviour
 {
+    #region Variables
+
     public static GridManager Instance;
     public CellDataContainer cellDataContainer;
 
-    [SerializeField]
-    GridConfiguration gridConfig;
+    [SerializeField] GridConfiguration gridConfig;
 
-    // distance & direction Calculate
     Vector3[] PathPoints;
     int Diff_Horizontal;
     int Diff_Vertical;
     int ListIndex;
     int TotalSteps;
 
-    // Path calculation
     CustomDataStructures.CellIndex CurrentCellIndex;
     int CurrentDistance;
     CustomDataStructures.CellIndex Incrementals;
+
+    #endregion
+
+
+    #region Initialization
 
     void Awake()
     {
@@ -34,12 +44,18 @@ public class GridManager : MonoBehaviour
         }
     }
 
+    #endregion
+
+
+    // Return CellData associated with CellIndex
     public CellData GetCellData_From_CellIndex(CustomDataStructures.CellIndex _cellIndex)
     {
         ListIndex = (_cellIndex.Vertical * gridConfig.GridWidth) + _cellIndex.Horizontal;
         return cellDataContainer.AllCells[ListIndex];
     }
 
+
+    // Calculate path of user input to the selected character
     public CharacterProperties.Movement_Type GetInputDirection(CustomDataStructures.CellIndex _characterPos, CustomDataStructures.CellIndex _inputPosition)
     {
         Diff_Horizontal = _inputPosition.Horizontal - _characterPos.Horizontal;
@@ -88,8 +104,10 @@ public class GridManager : MonoBehaviour
         {
             return _number;
         }
-    }    
+    }
 
+
+    // Calculate cell distance between character position and selected target cell
     public int GetCellDistance(CustomDataStructures.CellIndex _characterPos, CustomDataStructures.CellIndex _inputPosition, CharacterProperties.Movement_Type _movement)
     {
         Diff_Horizontal = _inputPosition.Horizontal - _characterPos.Horizontal;
@@ -118,6 +136,8 @@ public class GridManager : MonoBehaviour
         return TotalSteps;
     }
 
+
+    // Calculate path points to travel to the destination cell from selected player cell
     public Vector3[] GetPathPoints(CustomDataStructures.CellIndex _startPoint, CustomDataStructures.CellIndex _destination, CharacterProperties.Movement_Type _direction, int _distance)
     {
         Diff_Horizontal = _destination.Horizontal - _startPoint.Horizontal;

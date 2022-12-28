@@ -1,21 +1,28 @@
+/// <Sumery>
+/// This class is responsible for:
+/// 1. Detecting user input and raising further Action Events to start the flow
+/// </Summery>
+
 using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    [SerializeField]
-    Camera MainCamera;
+    #region Variables
 
-    [SerializeField]
-    LayerMask InputLayerMask;
-
-    [SerializeField]
-    float RayDistance;
+    [SerializeField] Camera MainCamera;
+    [SerializeField] LayerMask InputLayerMask;
+    [SerializeField] float RayDistance;
 
     RaycastHit HitInfo;
 
     const string TagCells = "Cell";
     const string TagCharacters = "Character";
     const string TargetCell = "Target cell is occupied";
+
+    #endregion
+
+
+    #region Input Detection
 
     public void OnTouchClick()
     {
@@ -53,12 +60,12 @@ public class InputManager : MonoBehaviour
                     else if (character.CharacterState == Character.Character_State.Selected)
                     {
                         ActionsContainer.OnCharacterDeSelected?.Invoke(character.CharacterID);
-                        ActionsContainer.OnAllCharactersDeSelected?.Invoke();
-
                         GameStateManager.Instance.UpdateGameState(GameStateManager.Game_State.Idle);
                     }
                 }
             }
         }
     }
+
+    #endregion
 }

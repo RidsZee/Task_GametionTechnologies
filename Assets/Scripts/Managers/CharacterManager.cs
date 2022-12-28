@@ -1,17 +1,21 @@
+/// <Sumery>
+/// This class is responsible for:
+/// 1. Initializing all character's position on grid
+/// 2. Deciding selected character based on given character index
+/// 3. Seting up character's identity for associated player
+/// </Summery>
+
 using UnityEngine;
 
 public class CharacterManager : MonoBehaviour
 {
+    #region Variables
+
     public static CharacterManager Instance;
 
-    [SerializeField]
-    GridConfiguration gridConfig;
-
-    [SerializeField]
-    Character[] P1Characters;
-
-    [SerializeField]
-    Character[] P2Characters;
+    [SerializeField] GridConfiguration gridConfig;
+    [SerializeField] Character[] P1Characters;
+    [SerializeField] Character[] P2Characters;
 
     int MidCell;
     int HorizontalIndex;
@@ -19,6 +23,11 @@ public class CharacterManager : MonoBehaviour
     CustomDataStructures.CellIndex currentCellIndex;
 
     const string Warning1 = "Required fields not assigned in <CharacterManager> to place characters";
+
+    #endregion
+
+
+    #region Initialization
 
     void Awake()
     {
@@ -47,6 +56,12 @@ public class CharacterManager : MonoBehaviour
         ActionsContainer.OnIdentitySet -= OnPlayerIdentitySet;
     }
 
+    #endregion
+
+
+    #region Character Operations
+
+    // Place characters to their initial position on grid before the game starts
     void OnGridGenerationCompleted()
     {
         if(!gridConfig || P1Characters.Length == 0 || P2Characters.Length == 0)
@@ -86,6 +101,8 @@ public class CharacterManager : MonoBehaviour
         }
     }
 
+
+    // Update player's intaractable colliders to prevent interacting with characters not associated with current user
     void OnPlayerIdentitySet(PhotonNetworkManager.Player_Identity _identity)
     {
         if (_identity == PhotonNetworkManager.Player_Identity.Player1)
@@ -114,6 +131,7 @@ public class CharacterManager : MonoBehaviour
         }    
     }
 
+    // Return Character component based on CharacterID
     public Character GetCharacterFromCharacterID(int _characterID)
     {
         if(_characterID <= 5)
@@ -125,4 +143,6 @@ public class CharacterManager : MonoBehaviour
             return P2Characters[_characterID - 6];
         }
     }
+
+    #endregion
 }

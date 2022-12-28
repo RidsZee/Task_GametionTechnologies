@@ -1,3 +1,8 @@
+/// <Sumery>
+/// This class is responsible for:
+/// 1. Processing selected character related operations like selecting, deselecting, occupying cell, attack, defence and moving
+/// </Summery>
+
 using UnityEngine;
 
 public class Character : MonoBehaviour, IPlayerAttack, IPlayerDefend, IPlayerWalk, IPlayerOccupyCell
@@ -9,21 +14,28 @@ public class Character : MonoBehaviour, IPlayerAttack, IPlayerDefend, IPlayerWal
         Moving
     }
 
-    public PhotonNetworkManager.Player_Identity PlayerType;
-    public CharacterProperties characterProperties;
+
+    #region Variables
+
     public GridConfiguration gridConfig;
+    public CharacterProperties characterProperties;
+    public PhotonNetworkManager.Player_Identity PlayerType;
     public CustomDataStructures.CellIndex CurrentCell;
-    public Character_State CharacterState;
-    public int CharacterID;
+    public Character_State CharacterState; 
     public CapsuleCollider CharacterCollider;
-    [SerializeField]
-    Renderer MyRenderer;
+
+    public int CharacterID;
+    [SerializeField] Renderer MyRenderer;
+
+    #endregion
+
+
+    #region Initialization
 
     void OnEnable()
     {
         ActionsContainer.OnCharacterSelected += OnCharacterSelected;
         ActionsContainer.OnCharacterDeSelected += OnCharacterDeselected;
-        ActionsContainer.OnAllCharactersDeSelected += AllCharactersDeSelected;
         ActionsContainer.OnPlayerSideSwitch += OnPlayerSideSwitched;
     }
 
@@ -31,7 +43,6 @@ public class Character : MonoBehaviour, IPlayerAttack, IPlayerDefend, IPlayerWal
     {
         ActionsContainer.OnCharacterSelected -= OnCharacterSelected;
         ActionsContainer.OnCharacterDeSelected -= OnCharacterDeselected;
-        ActionsContainer.OnAllCharactersDeSelected -= AllCharactersDeSelected;
         ActionsContainer.OnPlayerSideSwitch -= OnPlayerSideSwitched;
     }
 
@@ -39,13 +50,17 @@ public class Character : MonoBehaviour, IPlayerAttack, IPlayerDefend, IPlayerWal
     {
         Vector3 mySize = Vector3.one * (gridConfig.CellSize * gridConfig.CharacterRelativeSize);
         transform.localScale = mySize;
-        SetDimColor();
+
+        if (MyRenderer)
+        {
+            MyRenderer.material = characterProperties.MatDim;
+        }
     }
 
-    void AllCharactersDeSelected()
-    {
-        OnCharacterDeselected(CharacterID);
-    }
+    #endregion
+
+
+    #region Assign Action Callbacks
 
     void OnCharacterSelected(int _characterID)
     {
@@ -107,6 +122,10 @@ public class Character : MonoBehaviour, IPlayerAttack, IPlayerDefend, IPlayerWal
         }
     }
 
+    #endregion
+
+
+    #region Interface implementation
 
     public void DoAttack()
     {
@@ -118,7 +137,7 @@ public class Character : MonoBehaviour, IPlayerAttack, IPlayerDefend, IPlayerWal
         // Define defence mechanism
     }
 
-    // Occupy cell whenever the character moves to a new cell / destination
+    // Occupy the cell whenever the character reaches the destination cell
     public void DoOccupyCell(CustomDataStructures.CellIndex _cellIndex)
     {
         CurrentCell = _cellIndex;
@@ -131,32 +150,25 @@ public class Character : MonoBehaviour, IPlayerAttack, IPlayerDefend, IPlayerWal
         ActionsContainer.OnBeginWalking?.Invoke(_targetDestinationCell);
     }
 
+    #endregion
 
+
+    // Highlight character colors based on current player turn
     void OnPlayerSideSwitched(PhotonNetworkManager.Player_Identity _currentPlayer)
     {
         if(PhotonNetworkManager.Instance.MyIdentity == PlayerType && _currentPlayer == PlayerType)
         {
-            SetHighlightColor();
+            if (MyRenderer)
+            {
+                MyRenderer.material = characterProperties.MatHighlight;
+            }
         }
         else
         {
-            SetDimColor();
-        }
-    }
-
-    void SetHighlightColor()
-    {
-        if(MyRenderer)
-        {
-            MyRenderer.material = characterProperties.MatHighlight;
-        }
-    }
-
-    void SetDimColor()
-    {
-        if (MyRenderer)
-        {
-            MyRenderer.material = characterProperties.MatDim;
+            if (MyRenderer)
+            {
+                MyRenderer.material = characterProperties.MatDim;
+            }
         }
     }
 }

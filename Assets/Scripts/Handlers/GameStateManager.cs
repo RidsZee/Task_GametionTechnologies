@@ -1,3 +1,8 @@
+/// <Sumery>
+/// This class is responsible for:
+/// 1. Containing and updating game state
+/// </Summery>
+
 using UnityEngine;
 
 public class GameStateManager : MonoBehaviour

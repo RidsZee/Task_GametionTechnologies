@@ -1,18 +1,29 @@
+/// <Sumery>
+/// This class is responsible for:
+/// 1. Holding cell specific data
+/// 2. Processing cell specific operations affecing its configuration like color, occupacy, index in grid etc
+/// </Summery>
+
 using UnityEngine;
 using System.Collections;
 
 public class CellData : MonoBehaviour
 {
-    [HideInInspector]
-    public DirectionList.ListOfDirections PreferredDirection;
+    #region Variables
+
     public CustomDataStructures.CellIndex CellIndex;
     public bool isOccupied;
 
     [SerializeField] Renderer MyRenderer;
-    Material DefaultMaterial;
 
+    Material DefaultMaterial;
     bool isWrongCellHighlighted;
     Coroutine Coroutine_HighlightWrongCell;
+
+    #endregion
+
+
+    #region Initialization
 
     void Awake()
     {
@@ -27,6 +38,11 @@ public class CellData : MonoBehaviour
         CellIndex.Horizontal = _indexHorizontal;
         CellIndex.Vertical = _indexVertical;
     }
+
+    #endregion
+
+
+    #region Update Colors
 
     public void SetGridColor(Material _mat)
     {
@@ -54,6 +70,19 @@ public class CellData : MonoBehaviour
         }
     }
 
+    public void SetCorrectColor(Material _mat)
+    {
+        if (MyRenderer)
+        {
+            MyRenderer.material = _mat;
+        }
+    }
+
+    #endregion
+
+
+    #region Highlight Wrong Cell
+
     public void SetWrongColor(Material _mat, float _timer)
     {
         if (MyRenderer)
@@ -69,20 +98,12 @@ public class CellData : MonoBehaviour
         }
     }
 
-    public void SetCorrectColor(Material _mat)
-    {
-        if (MyRenderer)
-        {
-            MyRenderer.material = _mat;
-        }
-    }
-
     IEnumerator HighlightWrongCell(Material _mat, float _timer)
     {
         isWrongCellHighlighted = true;
         float currentTimer = _timer;
 
-        while(currentTimer > 0)
+        while (currentTimer > 0)
         {
             currentTimer -= Time.deltaTime;
 
@@ -92,4 +113,6 @@ public class CellData : MonoBehaviour
         SetDefaultColor();
         isWrongCellHighlighted = false;
     }
+
+    #endregion
 }

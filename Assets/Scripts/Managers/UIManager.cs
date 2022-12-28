@@ -1,3 +1,9 @@
+/// <Sumery>
+/// This class is responsible for:
+/// 1. Showing all UI on screen
+/// 2. This class does use singleton, it does not receive any Actions nor any RPCs
+/// </Summery>
+
 using UnityEngine;
 using TMPro;
 using System.Text;
@@ -5,37 +11,37 @@ using System.Collections;
 
 public class UIManager : MonoBehaviour
 {
+    #region Variables
+
     public static UIManager Instance;
     public CustomDataStructures.GameStatus gameStatus;
     
-    [SerializeField]
-    int MaxMultiplayerLogs;
+    [SerializeField] TextMeshProUGUI T_GameStatus;
+    [SerializeField] TextMeshProUGUI T_MultiplayerLogs;
+    [SerializeField] TextMeshProUGUI T_Warning;
 
-    [Header("UI References")]
+    [SerializeField] int MaxMultiplayerLogs;
+    [SerializeField] public float WarningDuration;
 
-    [SerializeField]
-    TextMeshProUGUI T_GameStatus;
-
-    [SerializeField]
-    TextMeshProUGUI T_MultiplayerLogs;
-
-    [SerializeField]
-    TextMeshProUGUI T_Warning;
-
-    [SerializeField]
-    public float WarningDuration;
     float WarningTimer;
-    Coroutine WarningCoroutine;
     bool isWarningActive;
-
     int CurrentLogs;
+    
     StringBuilder stringBuilderLogs;
     StringBuilder stringBuilderWarning;
+    
     const string NewLine = "\n";
     const string LogWarning = "Warning : \n";
     const string MultiplayerLogsTitle = "Multiplayer logs: \n\n";
     const string GameStatsTitle = "Game stats: \n\n";
     const string Separator = " | ";
+
+    Coroutine WarningCoroutine;
+
+    #endregion
+
+
+    #region Initialization
 
     void Awake()
     {
@@ -59,6 +65,11 @@ public class UIManager : MonoBehaviour
         UpdateGameStatsInUI();
         stringBuilderLogs.Append(MultiplayerLogsTitle);
     }
+
+    #endregion
+
+
+    #region Update UI On Screen
 
     public void UpdateGameStatsInUI()
     {
@@ -107,4 +118,6 @@ public class UIManager : MonoBehaviour
         T_Warning.text = LogWarning;
         isWarningActive = false;
     }
+
+    #endregion
 }

@@ -1,20 +1,28 @@
+/// <Sumery>
+/// This class is responsible for:
+/// 1. Game logic and calculation
+/// 2. Keep all the game related data synced
+/// 3. Store live state and values and keep them available for other classes
+/// </Summery>
+
 using UnityEngine;
 using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField]
-    GridConfiguration gridConfig;
+    #region Variables
+
+    [SerializeField] GridConfiguration gridConfig;
 
     Character SelectedCharacter;
     CustomDataStructures.CellIndex SelectedCell;
-    int CellDistance;
     CharacterProperties.Movement_Type InputDetectedDirection;
+    Coroutine Coroutine_MoveCharacter;
     CellData CurrentCellData;
     CellData TargetCellData;
     Vector3[] PathPoints;
-    Coroutine Coroutine_MoveCharacter;
 
+    int CellDistance;
     int currentCellIndex_H;
     int currentCellIndex_V;
     int targetCellIndex_H;
@@ -24,27 +32,41 @@ public class GameManager : MonoBehaviour
     const string Warning2 = "Invalid Cell for the selected character";
     const string None = "None";
 
+    #endregion
+
+
+    #region Initialization
+
     void OnEnable()
     {
         ActionsContainer.OnCharacterSelected += OnCharacterSelected;
-        ActionsContainer.OnAllCharactersDeSelected += OnAllCharactersDeSelected;
+        ActionsContainer.OnCharacterDeSelected += OnCharacterDeSelected;
+
         ActionsContainer.OnBeginWalking += OnCharacterWalkStarted;
+        ActionsContainer.OnSyncCharacterMovement += RPC_Receive_MoveCharacterToDestination;
         ActionsContainer.OnCharacterReachedTarget += OnCharacterReachedTarget;
+
         ActionsContainer.OnGameStart += RPC_Receive_GameStart;
         ActionsContainer.OnPlayerSideSwitch += RPC_Receive_SwitchSides;
-        ActionsContainer.OnSyncCharacterMovement += RPC_Receive_MoveCharacterToDestination;
     }
 
     void OnDisable()
     {
         ActionsContainer.OnCharacterSelected -= OnCharacterSelected;
-        ActionsContainer.OnAllCharactersDeSelected -= OnAllCharactersDeSelected;
+        ActionsContainer.OnCharacterDeSelected += OnCharacterDeSelected;
+
         ActionsContainer.OnBeginWalking -= OnCharacterWalkStarted;
+        ActionsContainer.OnSyncCharacterMovement -= RPC_Receive_MoveCharacterToDestination;
         ActionsContainer.OnCharacterReachedTarget -= OnCharacterReachedTarget;
+
         ActionsContainer.OnGameStart -= RPC_Receive_GameStart;
         ActionsContainer.OnPlayerSideSwitch -= RPC_Receive_SwitchSides;
-        ActionsContainer.OnSyncCharacterMovement -= RPC_Receive_MoveCharacterToDestination;
     }
+
+    #endregion
+
+
+    #region Character Selection
 
     void OnCharacterSelected(int _characterID)
     {
@@ -57,13 +79,17 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.UpdateGameStatsInUI();
     }
 
-    void OnAllCharactersDeSelected()
+    void OnCharacterDeSelected(int _characterIndex)
     {
-        SelectedCharacter = null;
         GridManager.Instance.GetCellData_From_CellIndex(SelectedCell).SetDefaultColor();
         UIManager.Instance.gameStatus.SelectedCharacter = None;
         UIManager.Instance.UpdateGameStatsInUI();
     }
+
+    #endregion
+
+
+    #region Character movement
 
     void OnCharacterWalkStarted(CellData _cellData)
     {
@@ -127,9 +153,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
-    #region Character movement
-
     void MoveCharacterToDestination(CellData _destinationCell)
     {
         GameStateManager.Instance.UpdateGameState(GameStateManager.Game_State.MovingCharacter);
@@ -181,13 +204,13 @@ public class GameManager : MonoBehaviour
             TargetCellData = GridManager.Instance.GetCellData_From_CellIndex(targetCellDataIndex);
         }
 
-        ActionsContainer.OnCharacterDeSelected(SelectedCharacter.CharacterID);
-
         CurrentCellData.SetDefaultColor();
         CurrentCellData.isOccupied = false;
         TargetCellData.SetDefaultColor();
-        SelectedCharacter.DoOccupyCell(TargetCellData.CellIndex);
         SelectedCharacter.CharacterState = Character.Character_State.Idle;
+        SelectedCharacter.DoOccupyCell(TargetCellData.CellIndex);
+
+        ActionsContainer.OnCharacterDeSelected(SelectedCharacter.CharacterID);
 
         UIManager.Instance.gameStatus.SelectedCharacter = None;
         UIManager.Instance.UpdateGameStatsInUI();

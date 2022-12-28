@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class ActionsContainer
 {
+    #region Local Actions
+
     public static Action OnGridGenerationCompleted;
     public static Action OnAttack;
     public static Action OnDefend;
@@ -12,14 +14,17 @@ public class ActionsContainer
     public static Action<CustomDataStructures.CellIndex> OnOccupyCell;
     public static Action<int> OnCharacterSelected;
     public static Action<int> OnCharacterDeSelected;
-    public static Action OnAllCharactersDeSelected;
+
+    #endregion
+
+
+    #region Multiplayer Actions
+
     public static Action OnCharacterReachedTarget;
-
-    // Multiplayer
-
-    public static Action OnConnectedToNetwork;
     public static Action<PhotonNetworkManager.Player_Identity> OnIdentitySet;
     public static Action OnGameStart;
     public static Action<PhotonNetworkManager.Player_Identity> OnPlayerSideSwitch;
     public static Action<int, Vector3[], int, int, int, int, int> OnSyncCharacterMovement;
+
+    #endregion
 }

@@ -10,6 +10,7 @@ public class CustomDataStructures
         public int Vertical;
     }
 
+
     [Serializable]
     public struct GameStatus
     {

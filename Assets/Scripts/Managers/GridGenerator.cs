@@ -1,18 +1,22 @@
+/// <Sumery>
+/// This class is responsible for:
+/// 1. Generation of highly dynamic grid based on Grid Configuration data
+/// 2. Raising necessary Action Events
+/// 3. Manage game states associated with grid generation process
+/// </Summery>
+
 using System.Collections;
 using UnityEngine;
 
 public class GridGenerator : MonoBehaviour
 {
+    #region Variables
+
     [Header("Grid Cell Generator")]
 
-    [SerializeField]
-    GridConfiguration gridConfig;
-
-    [SerializeField]
-    Transform CellInitPosition;
-    
-    [Range(5, 50)] 
-    public int CellsGenerationPerFrame = 5; // Determines how many Cells to generate per frame
+    [SerializeField] GridConfiguration gridConfig;
+    [SerializeField] Transform CellInitPosition;
+    [Range(5, 50)] public int CellsGenerationPerFrame = 5; // Determines how many Cells to generate per frame
     
     GameObject CellPrefab; // The original prefab gameobject
     GameObject CellPrefabScaled; // Modified prefab to instantiate for Cells
@@ -33,6 +37,9 @@ public class GridGenerator : MonoBehaviour
     const string WarningCellData = "CellData component not attached to Cell Prefab";
 
     Coroutine coroutineGenerateGrid;
+
+    #endregion
+
 
     void Start()
     {

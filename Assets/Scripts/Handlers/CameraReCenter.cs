@@ -1,19 +1,26 @@
+/// <Sumery>
+/// This class is responsible for:
+/// 1. Placing the camera in center based on grid structure
+/// </Summery>
+
 using UnityEngine;
 
 public class CameraReCenter : MonoBehaviour
 {
-    [SerializeField]
-    Transform MainCamera;
+    #region Variables
 
-    [SerializeField]
-    GridConfiguration gridConfig;
-
-    [SerializeField]
-    Transform CellInitPosition;
+    [SerializeField] Transform MainCamera;
+    [SerializeField] GridConfiguration gridConfig;
+    [SerializeField] Transform CellInitPosition;
 
     float MaxWidth;
     float MaxLength;
     Vector3 camPosition;
+
+    #endregion
+
+
+    #region Initialization
 
     void Start()
     {
@@ -31,4 +38,6 @@ public class CameraReCenter : MonoBehaviour
             MainCamera.position = camPosition;
         }
     }
+
+    #endregion
 }

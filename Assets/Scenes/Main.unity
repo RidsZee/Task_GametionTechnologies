@@ -989,9 +989,9 @@ Canvas:
   m_GameObject: {fileID: 531746950}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
+  m_RenderMode: 1
+  m_Camera: {fileID: 963194227}
+  m_PlaneDistance: 5
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -1855,7 +1855,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 1
+  m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -1939,7 +1939,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 192
+    m_Bits: 224
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -2234,6 +2234,7 @@ GameObject:
   - component: {fileID: 1174821913}
   - component: {fileID: 1174821914}
   - component: {fileID: 1174821915}
+  - component: {fileID: 1174821916}
   m_Layer: 0
   m_Name: _GameScripts
   m_TagString: Untagged
@@ -2342,6 +2343,19 @@ MonoBehaviour:
   MainCamera: {fileID: 963194228}
   gridConfig: {fileID: 11400000, guid: 647d2e669fc373640bbecda8119ab26c, type: 2}
   CellInitPosition: {fileID: 37851747}
+--- !u!114 &1174821916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1174821908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa7aaa154a266834f8ca16573d425de8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DisableLogs: 1
 --- !u!1 &1190725061
 GameObject:
   m_ObjectHideFlags: 0

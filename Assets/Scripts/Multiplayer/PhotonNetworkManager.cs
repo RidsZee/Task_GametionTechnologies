@@ -1,15 +1,29 @@
+/// <Sumery>
+/// This class is responsible for:
+/// 1. Multiplayer connection, room and RPC management
+/// 2. Processing game states connected with multiplayer activities
+/// 3. Game logic for switching player sides
+/// </Summery>
+
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 
 public class PhotonNetworkManager : MonoBehaviourPunCallbacks
 {
-    public static PhotonNetworkManager Instance;
-    [SerializeField]
-    int RoomFailedAttempt;
-    public bool isMaster;
+    public enum Player_Identity
+    {
+        None,
+        Player1,
+        Player2
+    }
 
-    // Logs
+
+    #region Variables
+
+    public static PhotonNetworkManager Instance;
+    public bool isMaster;
+    [SerializeField] int RoomFailedAttempt;
 
     const string LogConnecting = "Connecting to server...";
     const string LogJoining = "Connected. Joining Room...";
@@ -21,15 +35,13 @@ public class PhotonNetworkManager : MonoBehaviourPunCallbacks
     const string LogOpponentJoined = "Opponent joined";
     const string LogDisconnected = "Disconnected from server";
 
-    public enum Player_Identity
-    {
-        None,
-        Player1,
-        Player2
-    }
-
     public Player_Identity MyIdentity;
     public Player_Identity CurrentTurnPlayer;
+
+    #endregion
+
+
+    #region Initialization
 
     void Awake()
     {
@@ -42,6 +54,11 @@ public class PhotonNetworkManager : MonoBehaviourPunCallbacks
             Instance = this;
         }
     }
+
+    #endregion
+
+
+    #region Server Connectivity
 
     public void Call_ConnectToServer()
     {
@@ -129,6 +146,9 @@ public class PhotonNetworkManager : MonoBehaviourPunCallbacks
         UIManager.Instance.gameStatus.Update_isConnected(false);
         UIManager.Instance.UpdateGameStatsInUI();
     }
+
+    #endregion
+
 
     void UpdateGameStatus()
     {
